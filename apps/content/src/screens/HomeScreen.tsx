@@ -14,7 +14,7 @@ const HomeScreen = () => {
       <Header />
 
       <section
-        className="mx-auto mt-12 flex flex-col md:flex-row-reverse justify-between items-center px-5 lg:px-10 "
+        className="mx-auto flex flex-col md:flex-row-reverse justify-between items-center px-5 lg:px-10 "
         id="rulesContainer"
       >
         <div className="w-full">
@@ -22,7 +22,7 @@ const HomeScreen = () => {
         </div>
 
         <div className="w-full">
-          <h1 className="my-8 lg:text-4xl text-3xl md:w-4/6 font-medium text-[#333] lg:leading-normal leading-normal mb-3">
+          <h1 className="my-5 lg:text-4xl text-2xl md:w-4/6 font-medium text-[#333] lg:leading-normal leading-normal mb-3">
             Learn new concepts for each question
           </h1>
           <p className="border-l-4 pl-2 py-2 mb-6 text-gray-500">
