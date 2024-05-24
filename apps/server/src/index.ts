@@ -1,9 +1,21 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
 
-const app = new Hono()
+const app = new Hono();
+const currentServerTime = new Date().toISOString();
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+app.get("/", (c) => {
+  //return server info
+  console.log("GET /");
+  return c.json({
+    name: "DucVuAPIServer",
+    version: "1.0.0",
+    startServerTime: currentServerTime,
+  });
+});
 
-export default app
+app.get("/hello/:name", (c) => {
+  const name = c.req.param("name");
+  return c.text(`Hello ${name}!`);
+});
+
+export default app;
