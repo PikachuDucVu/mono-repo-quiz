@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NormalScreen } from "../components/NormalScreen";
-import Header from "./Header";
+import Header from "../components/Header";
 
 const HomeScreen = () => {
   const [loading, setLoading] = useState(false);

@@ -1,7 +1,9 @@
 import { Hono } from "hono";
+import { connectMongoose } from "./services/mongoose";
 
 const app = new Hono();
 const currentServerTime = new Date().toISOString();
+connectMongoose();
 
 app.get("/", (c) => {
   //return server info
