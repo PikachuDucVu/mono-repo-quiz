@@ -24,7 +24,7 @@ export const NormalScreen = ({
       className={[
         "h-full flex flex-col",
         disableGap ? "" : "gap-2",
-        embedded ? "max-w-screen-lg" : "max-w-screen-sm overflow-y-auto",
+        embedded ? "max-w-screen-xl" : "max-w-screen-sm overflow-y-auto",
         disablePadding || embedded ? "" : "p-3",
         wFull ? "w-full" : "",
         disableDefaultBackground ? "" : "bg-gray-900",
