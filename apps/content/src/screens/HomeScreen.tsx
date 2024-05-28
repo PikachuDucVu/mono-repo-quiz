@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NormalScreen } from "../components/NormalScreen";
 import Header from "../components/Header";
+import { Link } from "wouter";
 
 const HomeScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -22,21 +23,22 @@ const HomeScreen = () => {
         </div>
 
         <div className="w-full">
-          <h1 className="my-5 lg:text-4xl text-2xl md:w-4/6 font-medium text-[#333] lg:leading-normal leading-normal mb-3">
-            Learn new concepts for each question
+          <h1 className="my-5 lg:text-5xl text-2xl md:w-5/6 font-medium text-[#333] lg:leading-normal leading-normal mb-3">
+            Learn and practice with quizzes
           </h1>
           <p className="border-l-4 pl-2 py-2 mb-6 text-gray-500">
-            We help you prepare for exams and quizzes{" "}
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </p>
           <div className="flex  items-center">
-            <button
+            <Link
+              to="/admin"
               onClick={handleStartQuiz}
               className={`bg-[#FCC822] px-6 py-2 text-white rounded ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
               id="startQuiz"
               type="button"
             >
               {loading ? "Loading..." : "Start Quiz"}
-            </button>
+            </Link>
 
             <button
               className="px-6 py-2 text-[#FCC822] hover:bg-[#FCC822] hover:text-white rounded inline-flex ml-3 transition-all duration-300"

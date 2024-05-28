@@ -4,8 +4,8 @@
 node_modules
 .pnp
 .pnp.js
-.bun.lockb
- 
+bun.lockb
+
 # Local env files
 .env
 .env.local
