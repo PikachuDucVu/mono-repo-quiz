@@ -86,7 +86,7 @@ const ExamScreen = () => {
                 className={`flex gap-3 text-black items-center border-4 
                 ${
                   questionaire[currentQuestionIndex].currentAnswer === option
-                    ? "bg-yellow-300"
+                    ? "bg-gray-600 text-white"
                     : ``
                 }
                 rounded-md p-3 mt-3 cursor-pointer hover:shadow-lg transition text-xl`}
@@ -116,16 +116,9 @@ const ExamScreen = () => {
                 disableDefaultColor
                 disableDefaultPadding
                 className={`
-                ${
-                  currentQuestionIndex === index
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-black"
-                }
-                ${
-                  questionaire[index].currentAnswer
-                    ? "bg-green-500 text-white"
-                    : "bg-white"
-                }
+                ${questionaire[index].currentAnswer && currentQuestionIndex !== index && "bg-gray-600 text-white"}
+                ${currentQuestionIndex === index && "bg-blue-500 text-white"} 
+
                 py-3 px-5 rounded-xl hover:bg-blue-400 transition border-2 border-blue-500 `}
                 onClick={() => setCurrentQuestionIndex(index)}
               />
