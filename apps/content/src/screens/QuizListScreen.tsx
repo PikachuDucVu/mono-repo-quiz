@@ -9,7 +9,7 @@ import { Link } from "wouter";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 
 const QuizListScreen = () => (
-  <NormalScreen embedded disableDefaultBackground className="">
+  <NormalScreen embedded disableDefaultBackground className="" wFull>
     <Header />
     <div className="flex w-full py-5 px-10 gap-10 bg-slate-200 ">
       <div className="flex flex-col items-start font-medium gap-3 ">

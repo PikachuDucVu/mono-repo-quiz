@@ -3,10 +3,9 @@ import { connectMongoose } from "./services/mongoose";
 
 const app = new Hono();
 const currentServerTime = new Date().toISOString();
-connectMongoose();
+// connectMongoose();
 
 app.get("/", (c) => {
-  //return server info
   console.log("GET /");
   return c.json({
     name: "DucVuAPIServer",

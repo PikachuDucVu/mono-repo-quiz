@@ -6,7 +6,7 @@ import ExamScreen from "./screens/ExamScreen";
 
 function App() {
   return (
-    <div className="flex flex-1 w-full h-full justify-center ">
+    <div className="flex w-full h-full justify-center ">
       <Switch>
         <Route path="/" component={HomeScreen} />
         <Route path="/admin" component={QuizListScreen} />
