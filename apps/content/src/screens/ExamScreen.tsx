@@ -5,14 +5,10 @@ import Timer from "../animations/Timer.json";
 import Lottie from "lottie-react";
 import { useEffect, useState } from "react";
 import { Questionaire } from "../utils/types";
-type hexGradientColor = {
-  color1: string;
-  color2: string;
-};
 
 const ExamScreen = () => {
   const [time, setTime] = useState(60);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(1);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questionaire, setQuestionaire] = useState<Questionaire[]>([
     {
       question: "What is the capital of Vietnam1?",
@@ -32,7 +28,6 @@ const ExamScreen = () => {
     },
   ]);
 
-  console.log(questionaire);
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prev) => (prev - 1 > 0 ? prev - 1 : 0));

@@ -9,11 +9,16 @@ import { Link } from "wouter";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 
 const QuizListScreen = () => (
-  <NormalScreen embedded disableDefaultBackground className="" wFull>
+  <NormalScreen
+    embedded
+    disableDefaultBackground
+    className="h-full bg-slate-200 "
+    wFull
+  >
     <Header />
-    <div className="flex w-full py-5 px-10 gap-10 bg-slate-200 ">
+    <div className="flex w-full py-5 px-10 gap-10 bg-slate-200 h-full border-t border-gray-300">
       <div className="flex flex-col items-start font-medium gap-3 ">
-        <div className="font-bold text-xl">Thư viện bài tập</div>
+        <div className="font-bold text-lg">Thư viện bài tập</div>
         <div className="flex items-center gap-3 bg-white w-[250px] rounded-md px-3 py-1 shadow-md">
           <FaUser />
           <div>Bài tập được tạo</div>
@@ -25,7 +30,7 @@ const QuizListScreen = () => (
       </div>
 
       <div className="flex flex-col font-medium gap-3 w-full">
-        <div className="text-lg">Danh sách</div>
+        <div className="text-md">Danh sách </div>
         <div className="flex w-full flex-col gap-5">
           {dummyExamLibraries.map((exam) => (
             <Link
