@@ -54,7 +54,7 @@ const ExamScreen = () => {
         className="flex w-full h-full items-center
         justify-center font-medium text-gray-800"
       >
-        <div className="flex flex-col bg-white p-10 rounded-2xl w-[80%] h-[75%] relative -top-8">
+        <div className="flex flex-col bg-white p-7 rounded-2xl w-[80%] h-[75%] relative -top-8">
           <div
             className="flex w-full justify-between
            items-center "
@@ -63,7 +63,7 @@ const ExamScreen = () => {
               <Lottie animationData={Timer} className="h-16 " />
               <div className="text-md">
                 <div className="font-medium">Time remaining:</div>
-                <div className="font-bold text-xl">{`${time}:${time}`}</div>
+                <div className="font-bold text-lg">{`${time}:${time}`}</div>
               </div>
             </div>
             <CommonButton
@@ -74,12 +74,12 @@ const ExamScreen = () => {
             />
           </div>
 
-          <div className="p-3 mt-5 font-bold text-xl">
+          <div className="p-3 mt-2 font-bold text-xl">
             Question {currentQuestionIndex + 1}: <br />{" "}
             {questionaire[currentQuestionIndex].question}
           </div>
 
-          <div className="mt-5">
+          <div className="">
             {questionaire[currentQuestionIndex].options.map((option, index) => (
               <div
                 key={index}
@@ -89,7 +89,7 @@ const ExamScreen = () => {
                     ? "bg-gray-600 text-white"
                     : ``
                 }
-                rounded-md p-3 mt-3 cursor-pointer hover:shadow-lg transition text-xl`}
+                rounded-md p-3 mt-2 cursor-pointer hover:shadow-lg transition text-md`}
                 onClick={() => {
                   setQuestionaire((prev) => {
                     const newQuestionaire = [...prev];
@@ -116,9 +116,9 @@ const ExamScreen = () => {
                 disableDefaultColor
                 disableDefaultPadding
                 className={`
-                ${questionaire[index].currentAnswer && currentQuestionIndex !== index && "bg-gray-600 text-white"}
+                ${questionaire[index].currentAnswer && currentQuestionIndex !== index && "bg-gray-500 text-white"}
                 ${currentQuestionIndex === index && "bg-blue-500 text-white"} 
-                py-3 px-5 rounded-xl hover:bg-blue-400 transition border-2 border-blue-500 `}
+                py-2 px-4 rounded-xl hover:bg-blue-400 transition border-2 border-blue-500 `}
                 onClick={() => setCurrentQuestionIndex(index)}
               />
             ))}
