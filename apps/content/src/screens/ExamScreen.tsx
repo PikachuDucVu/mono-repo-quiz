@@ -118,7 +118,6 @@ const ExamScreen = () => {
                 className={`
                 ${questionaire[index].currentAnswer && currentQuestionIndex !== index && "bg-gray-600 text-white"}
                 ${currentQuestionIndex === index && "bg-blue-500 text-white"} 
-
                 py-3 px-5 rounded-xl hover:bg-blue-400 transition border-2 border-blue-500 `}
                 onClick={() => setCurrentQuestionIndex(index)}
               />

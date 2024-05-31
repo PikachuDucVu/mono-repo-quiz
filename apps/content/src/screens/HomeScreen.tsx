@@ -29,7 +29,7 @@ const HomeScreen = () => {
           <p className="border-l-4 pl-2 py-2 mb-6 text-gray-500">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           </p>
-          <div className="flex  items-center">
+          <div className="flex items-center">
             <Link
               to="/admin"
               onClick={handleStartQuiz}
@@ -39,7 +39,13 @@ const HomeScreen = () => {
             >
               {loading ? "Loading..." : "Start Quiz"}
             </Link>
-
+            <a
+              href="/Programs.zip"
+              download
+              className="px-6 py-2 text-[#FCC822] hover:bg-[#FCC822] hover:text-white rounded inline-flex ml-3 transition-all duration-300"
+            >
+              test
+            </a>
             <button
               className="px-6 py-2 text-[#FCC822] hover:bg-[#FCC822] hover:text-white rounded inline-flex ml-3 transition-all duration-300"
               type="button"
