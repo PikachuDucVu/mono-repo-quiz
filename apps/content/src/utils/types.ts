@@ -1,4 +1,4 @@
-export type Questionaire = {
+export type Question = {
   question: string;
   options: string[];
   currentAnswer?: string;
