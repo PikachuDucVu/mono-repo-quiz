@@ -22,25 +22,18 @@ const ExamScreen = () => {
   };
 
   return (
-    <NormalScreen
-      embedded
-      disableDefaultBackground
-      className="bg-gradient-to-b from-[#f3f7ec] to-[#bce2e7]"
-    >
-      <Header />
-      <div
-        className="flex w-full h-full items-center
+    <div
+      className="flex w-full h-full items-center
         justify-center font-medium text-gray-800"
-      >
-        <div className="flex flex-col bg-white p-7 rounded-2xl w-[80%] h-[75%] relative -top-8">
-          {!submitted ? (
-            <Questionaire onSubmit={checkAnswer} />
-          ) : (
-            <ShowScore score={totalScore} />
-          )}
-        </div>
+    >
+      <div className="flex flex-col bg-white p-7 rounded-2xl w-[80%] h-[75%] relative -top-8">
+        {!submitted ? (
+          <Questionaire onSubmit={checkAnswer} />
+        ) : (
+          <ShowScore score={totalScore} />
+        )}
       </div>
-    </NormalScreen>
+    </div>
   );
 };
 

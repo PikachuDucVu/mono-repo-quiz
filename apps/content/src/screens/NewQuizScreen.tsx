@@ -100,58 +100,55 @@ const NewQuizScreen = () => {
   };
 
   return (
-    <NormalScreen embedded disableDefaultBackground>
-      <Header />
-      <div className="flex w-full h-full font-medium text-gray-800 ">
-        <div className="flex flex-col bg-white w-1/4">
-          <div className="text-xl text-center p-3 bg-white">Questions</div>
-          <div className="p-3 flex flex-col flex-1 border-b border-gray-200 gap-3">
-            {questions.map((q, i) => (
+    <div className="flex w-full h-full font-medium text-gray-800 ">
+      <div className="flex flex-col bg-white w-1/4">
+        <div className="text-xl text-center p-3 bg-white">Questions</div>
+        <div className="p-3 flex flex-col flex-1 border-b border-gray-200 gap-3">
+          {questions.map((q, i) => (
+            <div
+              className="flex w-full cursor-pointer justify-between gap-2"
+              key={i}
+            >
               <div
-                className="flex w-full cursor-pointer justify-between gap-2"
-                key={i}
+                className="flex min-w-[80%] flex-1 bg-gray-200 hover:bg-gray-300 p-2 rounded-md items-center justify-between gap-2 cursor-pointer"
+                onClick={() => setCurrentQuestionIndex(i)}
               >
-                <div
-                  className="flex min-w-[80%] flex-1 bg-gray-200 hover:bg-gray-300 p-2 rounded-md items-center justify-between gap-2 cursor-pointer"
-                  onClick={() => setCurrentQuestionIndex(i)}
-                >
-                  <div className="truncate">
-                    {i + 1}: {q.question}
-                  </div>
-                  <div>✏️</div>
+                <div className="truncate">
+                  {i + 1}: {q.question}
                 </div>
-                <div className="flex items-center p-2 bg-gray-600 text-gray-200 rounded-md">
-                  <CommonButton
-                    addon={<IoMdRemoveCircle />}
-                    onClick={() => {
-                      deleteQuestion(i);
-                    }}
-                    secondaryStyle
-                    disableDefaultPadding
-                    disableDefaultColor
-                  />
-                </div>
+                <div>✏️</div>
               </div>
-            ))}
-            <div className="flex flex-col w-full flex-1 gap-3 justify-between">
-              <CommonButton text="Add Question" onClick={addQuestion} />
-              <CommonButton text="Save" onClick={onSubmit} />
+              <div className="flex items-center p-2 bg-gray-600 text-gray-200 rounded-md">
+                <CommonButton
+                  addon={<IoMdRemoveCircle />}
+                  onClick={() => {
+                    deleteQuestion(i);
+                  }}
+                  secondaryStyle
+                  disableDefaultPadding
+                  disableDefaultColor
+                />
+              </div>
             </div>
+          ))}
+          <div className="flex flex-col w-full flex-1 gap-3 justify-between">
+            <CommonButton text="Add Question" onClick={addQuestion} />
+            <CommonButton text="Save" onClick={onSubmit} />
           </div>
         </div>
-        <div className="px-5 flex-1 flex flex-col justify-center items-center">
-          <InteractiveQuestionnaire
-            question={questions[currentQuestionIndex]}
-            index={currentQuestionIndex}
-            updateQuestion={updateQuestion}
-            addOption={addOption}
-            removeOption={removeOption}
-            updateOption={updateOption}
-            updateCorrectAnswer={updateCorrectAnswer}
-          />
-        </div>
       </div>
-    </NormalScreen>
+      <div className="px-5 flex-1 flex flex-col justify-center items-center">
+        <InteractiveQuestionnaire
+          question={questions[currentQuestionIndex]}
+          index={currentQuestionIndex}
+          updateQuestion={updateQuestion}
+          addOption={addOption}
+          removeOption={removeOption}
+          updateOption={updateOption}
+          updateCorrectAnswer={updateCorrectAnswer}
+        />
+      </div>
+    </div>
   );
 };
 

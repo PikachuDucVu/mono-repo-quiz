@@ -4,10 +4,13 @@ import QuizListScreen from "./screens/QuizListScreen";
 import LoginScreen from "./screens/LoginScreen";
 import ExamScreen from "./screens/ExamScreen";
 import NewQuizScreen from "./screens/NewQuizScreen";
+import { NormalScreen } from "./components/NormalScreen";
+import Header from "./components/Header";
 
 function App() {
   return (
-    <div className="flex w-full h-full justify-center ">
+    <NormalScreen embedded disableDefaultBackground>
+      <Header />
       <Switch>
         <Route path="/" component={HomeScreen} />
         <Route path="/admin" component={QuizListScreen} />
@@ -15,7 +18,7 @@ function App() {
         <Route path="/login" component={LoginScreen} />
         <Route path="/play/:id" component={ExamScreen} />
       </Switch>
-    </div>
+    </NormalScreen>
   );
 }
 

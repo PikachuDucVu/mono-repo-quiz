@@ -27,20 +27,16 @@ const Header = () => {
             />
             <img src={logoImg} />
           </Link>
-          <div className="hidden lg:flex gap-5 items-center">
-            <Link to="/">Home</Link>
-            <Link to="/feature">Features</Link>
-            <Link to="/about">About us</Link>
-
-            {location !== "/login" && (
+          {location !== "/login" && (
+            <div className="hidden lg:flex gap-5 items-center">
               <Link
                 className="px-5 py-2 border-yellow-600 border font-bold"
                 to="/login"
               >
-                Login
+                Login / Register
               </Link>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
