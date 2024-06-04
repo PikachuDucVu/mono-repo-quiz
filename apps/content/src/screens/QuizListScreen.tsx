@@ -33,10 +33,6 @@ const QuizListScreen = () => {
             <FaUser />
             <div>Bài tập được tạo</div>
           </div>
-          <div className="flex items-center gap-3 w-[250px] rounded-md px-3 py-1 text-gray-600 hover:text-black hover:bg-white hover:shadow-md transition">
-            <FaFirstdraft />
-            <div>Nháp</div>
-          </div>
         </div>
 
         <div className="flex flex-col font-medium gap-3 w-full">

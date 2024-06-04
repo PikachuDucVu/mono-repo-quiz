@@ -3,3 +3,7 @@ export type Question = {
   options: string[];
   currentAnswer?: string;
 };
+
+export type QuizDefinition = Omit<Question, "currentAnswer"> & {
+  correctAnswer: string;
+};
