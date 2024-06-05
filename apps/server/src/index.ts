@@ -25,7 +25,7 @@ app.get("/hello/:name", (c) => {
 });
 
 app.notFound((c) => {
-  return c.text("Not found", 404);
+  return c.text("Khong tim thay, 404 Not found", 404);
 });
 
 app.post("/addQuestionaire", async (c) => {
