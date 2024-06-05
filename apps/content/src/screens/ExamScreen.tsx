@@ -1,6 +1,4 @@
 import { useState } from "react";
-import Header from "../components/Header";
-import { NormalScreen } from "../components/NormalScreen";
 import Questionaire from "../components/Questionaire";
 import { Question } from "../utils/types";
 import ShowScore from "../components/ShowScore";
