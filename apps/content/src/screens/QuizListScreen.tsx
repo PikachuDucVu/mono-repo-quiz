@@ -1,5 +1,3 @@
-import Header from "../components/Header";
-import { NormalScreen } from "../components/NormalScreen";
 import { FaShare, FaUser } from "react-icons/fa";
 import { dummyExamLibraries } from "../utils/dummyData";
 import { IoIosList } from "react-icons/io";
@@ -9,14 +7,30 @@ import { Link, useLocation } from "wouter";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { CommonButton } from "../components/common/CommonButton";
 import { v4 as uuid } from "uuid";
+import { useEffect, useState } from "react";
+import { QuizAppAPI } from "../utils/apis/Questionnaire";
+import { Questionnaire } from "../utils/types";
 
 const QuizListScreen = () => {
   const [, navigate] = useLocation();
+  const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
 
   const navigateToCreateNewQuiz = () => {
     const id = uuid();
     navigate(`/admin/quiz/${id}`);
   };
+  const navigateToModifyQuiz = (id: string) => {
+    navigate(`/admin/quiz/${id}`);
+  };
+
+  const fetchAllQuestionnaire = async () => {
+    const data = await QuizAppAPI.getAllQuestionnaires();
+    setQuestionnaires(data);
+  };
+
+  useEffect(() => {
+    fetchAllQuestionnaire();
+  }, []);
 
   return (
     <div className="flex w-full py-5 px-10 gap-10 bg-slate-200 h-full border-t border-gray-300">
@@ -41,10 +55,12 @@ const QuizListScreen = () => {
         </div>
 
         <div className="flex w-full flex-col gap-5">
-          {dummyExamLibraries.map((exam) => (
-            <Link
-              to={`/admin/quiz/${exam.id}`}
-              key={exam.id}
+          {questionnaires.map((exam) => (
+            <div
+              onClick={() => {
+                navigateToModifyQuiz(exam._id);
+              }}
+              key={exam._id}
               className="flex gap-5 bg-white rounded-md items-center px-3 py-2 shadow-md w-full cursor-pointer hover:shadow-lg transition hover:bg-slate-100"
             >
               <div>
@@ -58,28 +74,29 @@ const QuizListScreen = () => {
                 <div className="flex font-light gap-3 items-center">
                   <div className="flex items-center text-sm gap-1">
                     <IoIosList size={18} />
-                    <div>{exam.totalQuestions} câu hỏi</div>
+                    <div>{exam.questions.length} câu hỏi</div>
                   </div>
                   <div className="flex gap-1 text-sm items-center">
                     <GiLevelEndFlag />
-                    <div>{exam.level}</div>
+                    {/* <div>{exam.level}</div> */}
+                    <div>Easy</div>
                   </div>
                   <div className="flex gap-1 text-sm items-center">
                     <AiOutlineTags />
-                    <div>{exam.tags.join(", ")}</div>
+                    {/* <div>{exam.tags.join(", ")}</div> */}
+                    <div>Toán, Lịch sử, Văn</div>
                   </div>
                 </div>
                 <div className="flex w-full font-thin text-sm items-center justify-between ">
                   <div>
-                    {/* {exam.author} · 7 tháng trước */}
-                    {exam.author} · {exam.createdDate}
+                    Author: {exam.createdBy} · {exam.createdAt}
                   </div>
                   <div className="flex gap-3 font-medium items-center">
                     <button className="flex items-center gap-1 bg-blue-200 px-2 py-1 rounded-md hover:bg-blue-400 transition w-24 justify-center">
                       <FaShare />
                       Share
                     </button>
-                    <Link href={`/play/${exam.id}`}>
+                    <Link href={`/play/${exam._id}`}>
                       <button className="flex items-center justify-center bg-green-600 text-white px-2 py-1 rounded-md hover:bg-green-700 transition w-24">
                         <MdOutlineSubdirectoryArrowRight
                           size={18}
@@ -91,7 +108,7 @@ const QuizListScreen = () => {
                   </div>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>

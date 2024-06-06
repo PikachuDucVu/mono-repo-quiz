@@ -7,6 +7,10 @@ import NewQuizScreen from "./screens/NewQuizScreen";
 import { NormalScreen } from "./components/NormalScreen";
 import Header from "./components/Header";
 
+export type AppRouterParam = {
+  id: string;
+};
+
 function App() {
   return (
     <NormalScreen embedded disableDefaultBackground>

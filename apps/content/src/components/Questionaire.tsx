@@ -2,16 +2,16 @@ import Lottie from "lottie-react";
 import { useState, useEffect } from "react";
 import { CommonButton } from "./common/CommonButton";
 import Timer from "../animations/Timer.json";
-import { Question } from "../utils/types";
+import { QuestionItem } from "../utils/types";
 
 const Questionaire = ({
   onSubmit,
 }: {
-  onSubmit: (questionaire: Question[]) => void;
+  onSubmit: (questionaire: QuestionItem[]) => void;
 }) => {
   const [time, setTime] = useState(125);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [questionaire, setQuestionaire] = useState<Question[]>([
+  const [questionaire, setQuestionaire] = useState<QuestionItem[]>([
     {
       question: "What is the capital of Vietnam1?",
       options: ["Hanoi", "Ho Chi Minh", "Da Nang", "Hai Phong"],

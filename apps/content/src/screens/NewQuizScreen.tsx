@@ -1,116 +1,144 @@
-import { useState } from "react";
-import Header from "../components/Header";
-import { NormalScreen } from "../components/NormalScreen";
-import InteractiveQuestionnaire from "../components/RenderQuestion";
-import { QuizDefinition } from "../utils/types";
+import { useCallback, useEffect, useState } from "react";
 import { CommonButton } from "../components/common/CommonButton";
+import { useLocation, useParams } from "wouter";
+import { AppRouterParam } from "../App";
+import { QuizAppAPI } from "../utils/apis/Questionnaire";
+import { Questionnaire } from "../utils/types";
 import { IoMdRemoveCircle } from "react-icons/io";
-import { useLocation } from "wouter";
+import InteractiveQuestionnaire from "../components/RenderQuestion";
+import { MultilineTextInput } from "../components/common/MultilineTextInput";
 
 const NewQuizScreen = () => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [questions, setQuestions] = useState<QuizDefinition[]>([
-    {
-      question: "What is the capital of France?",
-      options: ["Paris", "Berlin", "London", "Madrid"],
-      correctAnswer: "Paris",
-    },
-    {
-      question: "What is the capital of Germany?",
-      options: ["Paris", "Berlin", "London", "Madrid"],
-      correctAnswer: "Berlin",
-    },
-    {
-      question: "What is the capital of England?",
-      options: ["Paris", "Berlin", "London", "Madrid"],
-      correctAnswer: "London",
-    },
-    {
-      question: "What is the capital of Spain?",
-      options: ["Paris", "Berlin", "London", "Madrid"],
-      correctAnswer: "Madrid",
-    },
-  ]);
+  const [questionnaire, setQuestionnaire] = useState<
+    Questionnaire | undefined
+  >();
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<
+    number | undefined
+  >(undefined);
 
+  const params = useParams<AppRouterParam>();
   const [, nagivate] = useLocation();
 
+  const fetchQuestions = useCallback(async () => {
+    const data = await QuizAppAPI.getQuestionnaireById(params.id);
+    setQuestionnaire(data);
+    if (data.questions.length > 0) {
+      setCurrentQuestionIndex(0);
+    }
+  }, [params.id]);
+
+  useEffect(() => {
+    fetchQuestions();
+  }, [fetchQuestions]);
+
+  const modifyTitle = (value: string) => {
+    if (value.length > 40) return;
+    setQuestionnaire((prev) => {
+      const newQuestionnaire = { ...prev };
+      newQuestionnaire.title = value;
+      return newQuestionnaire;
+    });
+  };
+
   const addQuestion = () => {
-    setQuestions((prev) => [
-      ...prev,
-      {
+    setQuestionnaire((prev) => {
+      const newQuestionnaire = { ...prev };
+      newQuestionnaire.questions.push({
         question: "",
         options: [],
         correctAnswer: "",
-      },
-    ]);
-    setCurrentQuestionIndex(questions.length);
+      });
+      return newQuestionnaire;
+    });
   };
 
   const addOption = () => {
-    setQuestions((prev) => {
-      const newQuestions = [...prev];
-      newQuestions[currentQuestionIndex].options.push("");
-      return newQuestions;
+    setQuestionnaire((prev) => {
+      const newQuestionnaire = { ...prev };
+      newQuestionnaire.questions[currentQuestionIndex].options.push("");
+      return newQuestionnaire;
     });
   };
 
   const updateQuestion = (value: string) => {
-    setQuestions((prev) => {
-      const newQuestions = [...prev];
-      newQuestions[currentQuestionIndex].question = value;
-      return newQuestions;
+    setQuestionnaire((prev) => {
+      const newQuestionnaire = { ...prev };
+      newQuestionnaire.questions[currentQuestionIndex].question = value;
+      return newQuestionnaire;
     });
   };
 
   const deleteQuestion = (index: number) => {
-    setQuestions((prev) => {
-      const newQuestions = [...prev];
-      newQuestions.splice(index, 1);
-      return newQuestions;
+    setQuestionnaire((prev) => {
+      const newQuestionnaire = { ...prev };
+      newQuestionnaire.questions.splice(index, 1);
+      return newQuestionnaire;
     });
+    setCurrentQuestionIndex(
+      currentQuestionIndex === index
+        ? undefined
+        : currentQuestionIndex > index
+          ? currentQuestionIndex - 1
+          : currentQuestionIndex
+    );
   };
 
   const updateOption = (index: number, value: string) => {
-    setQuestions((prev) => {
-      const newQuestions = [...prev];
-      newQuestions[currentQuestionIndex].options[index] = value;
-      return newQuestions;
+    setQuestionnaire((prev) => {
+      const newQuestionnaire = { ...prev };
+      if (
+        newQuestionnaire.questions[currentQuestionIndex].options[index] ===
+        newQuestionnaire.questions[currentQuestionIndex].correctAnswer
+      ) {
+        newQuestionnaire.questions[currentQuestionIndex].correctAnswer = value;
+      }
+      newQuestionnaire.questions[currentQuestionIndex].options[index] = value;
+      return newQuestionnaire;
     });
   };
 
   const updateCorrectAnswer = (value: string) => {
-    setQuestions((prev) => {
-      const newQuestions = [...prev];
-      newQuestions[currentQuestionIndex].correctAnswer = value;
-      return newQuestions;
+    setQuestionnaire((prev) => {
+      const newQuestionnaire = { ...prev };
+      newQuestionnaire.questions[currentQuestionIndex].correctAnswer = value;
+      return newQuestionnaire;
     });
   };
 
   const removeOption = (index: number) => {
-    setQuestions((prev) => {
-      const newQuestions = [...prev];
-      newQuestions[currentQuestionIndex].options.splice(index, 1);
-      return newQuestions;
+    setQuestionnaire((prev) => {
+      const newQuestionnaire = { ...prev };
+      newQuestionnaire.questions[currentQuestionIndex].options.splice(index, 1);
+      return newQuestionnaire;
     });
   };
 
-  const onSubmit = () => {
-    console.log(questions);
+  const onSubmit = async () => {
+    const res = await QuizAppAPI.updateQuestionnaire(params.id, questionnaire);
+    alert(res);
     nagivate("/admin");
   };
 
   return (
     <div className="flex w-full h-full font-medium text-gray-800 ">
       <div className="flex flex-col bg-white w-1/4">
+        <MultilineTextInput
+          value={questionnaire?.title || ""}
+          className="text-center text-xl font-semibold bg-gray-200 border-gray-200"
+          disableStyles
+          onChange={(e) => {
+            modifyTitle(e.target.value);
+          }}
+        />
         <div className="text-xl text-center p-3 bg-white">Questions</div>
         <div className="p-3 flex flex-col flex-1 border-b border-gray-200 gap-3">
-          {questions.map((q, i) => (
+          {questionnaire?.questions.map((q, i) => (
             <div
               className="flex w-full cursor-pointer justify-between gap-2"
               key={i}
             >
               <div
-                className="flex min-w-[80%] flex-1 bg-gray-200 hover:bg-gray-300 p-2 rounded-md items-center justify-between gap-2 cursor-pointer"
+                className={`flex min-w-[80%] flex-1 ${currentQuestionIndex === i ? "bg-gray-400 text-white" : "bg-gray-200"} hover:bg-gray-400 p-2 rounded-md items-center justify-between gap-2 cursor-pointer`}
                 onClick={() => setCurrentQuestionIndex(i)}
               >
                 <div className="truncate">
@@ -137,9 +165,9 @@ const NewQuizScreen = () => {
           </div>
         </div>
       </div>
-      <div className="px-5 flex-1 flex flex-col justify-center items-center">
+      {currentQuestionIndex !== undefined && (
         <InteractiveQuestionnaire
-          question={questions[currentQuestionIndex]}
+          question={questionnaire?.questions[currentQuestionIndex]}
           index={currentQuestionIndex}
           updateQuestion={updateQuestion}
           addOption={addOption}
@@ -147,7 +175,7 @@ const NewQuizScreen = () => {
           updateOption={updateOption}
           updateCorrectAnswer={updateCorrectAnswer}
         />
-      </div>
+      )}
     </div>
   );
 };

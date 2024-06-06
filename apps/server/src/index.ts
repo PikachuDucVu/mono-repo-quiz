@@ -1,14 +1,10 @@
 import { Hono } from "hono";
-import { connectMongoose } from "./services/mongoose";
-import mongoose from "mongoose";
-import {
-  IQuestionnaire,
-  QuestionnaireSchema,
-} from "./schemas/QuestionnaireSchema";
+import { cors } from "hono/cors";
+import QuestionnaireAPI from "./QuestionnaireAPI";
 
 const app = new Hono();
+app.use(cors());
 const currentServerTime = new Date().toISOString();
-connectMongoose();
 
 app.get("/", (c) => {
   console.log("GET /", new Date());
@@ -28,45 +24,7 @@ app.notFound((c) => {
   return c.text("Khong tim thay, 404 Not found", 404);
 });
 
-app.post("/addQuestionaire", async (c) => {
-  const body = (await c.req.json()) as IQuestionnaire;
+QuestionnaireAPI(app, currentServerTime);
 
-  const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
-
-  if (body.title === undefined || body.questions === undefined) {
-    return c.text(`Missing infomation`, 400);
-  }
-  if (!body.questions.length) {
-    return c.text(`Questionaire must have at least one question`, 400);
-  }
-  body.questions.map((question) => {
-    if (!question.question) {
-      return c.text(`Some question is missing question`, 400);
-    }
-    if (!question.options.length) {
-      return c.text(`Some question is missing options`, 400);
-    }
-    if (!question.correctAnswer) {
-      return c.text(`Some question is missing correct answer`, 400);
-    }
-  });
-
-  const questionaire = {
-    title: body.title,
-    questions: body.questions,
-    createdBy: new mongoose.Types.ObjectId(),
-  };
-  Questionnaire.create(questionaire);
-
-  console.log("POST /addQuestionaire", body.title, new Date());
-  return c.text(`Create questionaire successfully!`, 201);
-});
-
-app.get("/getQuestionaire", async (c) => {
-  const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
-  const questionaires = await Questionnaire.find();
-  console.log("GET /getQuestionaire", new Date());
-  return c.json(questionaires);
-});
-
+export { app, currentServerTime };
 export default app;

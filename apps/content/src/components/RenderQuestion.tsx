@@ -1,5 +1,5 @@
+import { QuestionItem, QuestionWithCorrectAnswer } from "../utils/types";
 import { CommonButton } from "./common/CommonButton";
-import { QuizDefinition } from "../utils/types";
 import { MultilineTextInput } from "./common/MultilineTextInput";
 import { FaHeart } from "react-icons/fa";
 import { IoMdRemoveCircle } from "react-icons/io";
@@ -13,7 +13,7 @@ const InteractiveQuestionnaire = ({
   updateOption,
   updateCorrectAnswer,
 }: {
-  question: QuizDefinition;
+  question: QuestionWithCorrectAnswer;
   index: number;
   updateQuestion: (value: string) => void;
   addOption: () => void;
@@ -25,9 +25,6 @@ const InteractiveQuestionnaire = ({
     <>
       <div className="flex flex-col w-full h-full gap-5">
         <div className="text-2xl font-semibold text-center text-gray-800">
-          <div className="p-3 bg-gray-300 rounded-md mb-3">
-            Question {index + 1}
-          </div>
           <MultilineTextInput
             value={question.question}
             className="text-center"

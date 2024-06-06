@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Questionaire from "../components/Questionaire";
-import { Question } from "../utils/types";
+import { QuestionItem } from "../utils/types";
 import ShowScore from "../components/ShowScore";
 const correctAnswer = ["Hanoi", "Hanoi", "Hanoi", "Hanoi"];
 
@@ -8,7 +8,7 @@ const ExamScreen = () => {
   const [submitted, setSubmitted] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
 
-  const checkAnswer = (questionaire: Question[]) => {
+  const checkAnswer = (questionaire: QuestionItem[]) => {
     let score = 0;
     questionaire.forEach((question, index) => {
       if (question.currentAnswer === correctAnswer[index]) {
