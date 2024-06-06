@@ -20,6 +20,16 @@ app.get("/hello/:name", (c) => {
   return c.text(`Hello ${name}!`);
 });
 
+app.get("/testLoop/:times", (c) => {
+  const times = parseInt(c.req.param("times"));
+  let result = "";
+  for (let i = 0; i < times; i++) {
+    result += `${i} \n`;
+  }
+  console.log("GET /testLoop/", times, new Date());
+  return c.text(result);
+});
+
 app.notFound((c) => {
   return c.text("Khong tim thay, 404 Not found", 404);
 });
