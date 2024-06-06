@@ -22,12 +22,18 @@ app.get("/hello/:name", (c) => {
 
 app.get("/testLoop/:times", (c) => {
   const times = parseInt(c.req.param("times"));
+
+  const startTime = Date.now();
+
   let result = "";
   for (let i = 0; i < times; i++) {
-    result += `${i} \n`;
+    result += `${i} `;
   }
-  console.log("GET /testLoop/", times, new Date());
-  return c.text(result);
+
+  const endTime = Date.now();
+  console.log("Execution Time", (endTime - startTime) / 1000, "s");
+
+  return c.json({ executionTime: (endTime - startTime) / 1000 });
 });
 
 app.notFound((c) => {
