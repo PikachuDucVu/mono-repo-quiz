@@ -1,4 +1,4 @@
-import { QuestionItem, QuestionWithCorrectAnswer } from "../utils/types";
+import { QuestionWithCorrectAnswer } from "../utils/types";
 import { CommonButton } from "./common/CommonButton";
 import { MultilineTextInput } from "./common/MultilineTextInput";
 import { FaHeart } from "react-icons/fa";
@@ -6,7 +6,6 @@ import { IoMdRemoveCircle } from "react-icons/io";
 
 const InteractiveQuestionnaire = ({
   question,
-  index,
   updateQuestion,
   addOption,
   removeOption,
