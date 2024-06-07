@@ -18,6 +18,7 @@ function App() {
       <Switch>
         <Route path="/" component={HomeScreen} />
         <Route path="/admin" component={QuizListScreen} />
+        <Route path="/admin/quiz/" component={NewQuizScreen} />
         <Route path="/admin/quiz/:id" component={NewQuizScreen} />
         <Route path="/login" component={LoginScreen} />
         <Route path="/play/:id" component={ExamScreen} />

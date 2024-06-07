@@ -28,6 +28,7 @@ const InteractiveQuestionnaire = ({
             value={question.question}
             className="text-center"
             onChange={(e) => updateQuestion(e.target.value)}
+            autoFocus
           />
         </div>
         <div className="flex flex-col gap-2">

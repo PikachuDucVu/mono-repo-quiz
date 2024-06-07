@@ -1,12 +1,10 @@
 import { FaShare, FaUser } from "react-icons/fa";
-import { dummyExamLibraries } from "../utils/dummyData";
 import { IoIosList } from "react-icons/io";
 import { GiLevelEndFlag } from "react-icons/gi";
 import { AiOutlineTags } from "react-icons/ai";
 import { Link, useLocation } from "wouter";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { CommonButton } from "../components/common/CommonButton";
-import { v4 as uuid } from "uuid";
 import { useEffect, useState } from "react";
 import { QuizAppAPI } from "../utils/apis/Questionnaire";
 import { Questionnaire } from "../utils/types";
@@ -16,8 +14,7 @@ const QuizListScreen = () => {
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
 
   const navigateToCreateNewQuiz = () => {
-    const id = uuid();
-    navigate(`/admin/quiz/${id}`);
+    navigate(`/admin/quiz/`);
   };
   const navigateToModifyQuiz = (id: string) => {
     navigate(`/admin/quiz/${id}`);
@@ -70,21 +67,19 @@ const QuizListScreen = () => {
                 <div className="font-normal border rounded-xl text-center text-sm min-w-20">
                   QUIZ
                 </div>
-                <div className="font-bold">{exam.title}</div>
+                <div className="font-bold">{exam?.title}</div>
                 <div className="flex font-light gap-3 items-center">
                   <div className="flex items-center text-sm gap-1">
                     <IoIosList size={18} />
-                    <div>{exam.questions.length} câu hỏi</div>
+                    <div>{exam?.questions.length} câu hỏi</div>
                   </div>
                   <div className="flex gap-1 text-sm items-center">
                     <GiLevelEndFlag />
-                    {/* <div>{exam.level}</div> */}
-                    <div>Easy</div>
+                    <div>{exam?.level}</div>
                   </div>
                   <div className="flex gap-1 text-sm items-center">
                     <AiOutlineTags />
-                    {/* <div>{exam.tags.join(", ")}</div> */}
-                    <div>Toán, Lịch sử, Văn</div>
+                    <div>{exam?.tags.join(", ")}</div>
                   </div>
                 </div>
                 <div className="flex w-full font-thin text-sm items-center justify-between ">

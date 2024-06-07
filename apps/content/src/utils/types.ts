@@ -9,11 +9,11 @@ export type QuestionWithCorrectAnswer = Omit<QuestionItem, "currentAnswer"> & {
 };
 
 export type Questionnaire = {
-  _id: string;
+  _id?: string;
   title: string;
   questions: QuestionWithCorrectAnswer[];
   level: "Easy" | "Medium" | "Hard";
   tags: string[];
-  createdAt: string;
-  createdBy: string;
+  createdAt?: string;
+  createdBy?: string;
 };

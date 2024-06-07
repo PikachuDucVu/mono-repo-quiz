@@ -11,6 +11,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
 
   app.post("/addQuestionaire", async (c) => {
     const body = (await c.req.json()) as IQuestionnaire;
+    console.log("body", body);
 
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
 
@@ -23,7 +24,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
 
     for (const question of body.questions) {
       if (!question.question) {
-        return c.text("Some question is missing question", 400);
+        return c.text("Some question is missing text", 400);
       }
       if (!question.options.length) {
         return c.text("Some question is missing options", 400);
@@ -36,6 +37,8 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     const questionaire = {
       title: body.title,
       questions: body.questions,
+      tags: body.tags,
+      level: body.level,
       createdBy: new mongoose.Types.ObjectId(),
     };
     await Questionnaire.create(questionaire);
@@ -92,7 +95,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
 
     const body = (await c.req.json()) as IQuestionnaire;
 
-    if (!body.title || !body.questions) {
+    if (!body.title || !body.questions || !body.level) {
       return c.text("Missing information", 400);
     }
     if (!body.questions.length) {
@@ -114,6 +117,8 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     const questionaire = {
       title: body.title,
       questions: body.questions,
+      tags: body.tags.length ? body.tags : [],
+      level: body.level,
       createdBy: new mongoose.Types.ObjectId(),
     };
     await Questionnaire.findByIdAndUpdate(id, questionaire);

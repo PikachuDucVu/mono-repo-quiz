@@ -2,6 +2,7 @@ import axios from "axios";
 import { QuestionWithCorrectAnswer, Questionnaire } from "../types";
 
 const BASE_URL = "https://api.ducvu.name.vn";
+// const BASE_URL = "http://localhost:3000";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -16,9 +17,10 @@ export const QuizAppAPI = {
   },
   getQuestionnaireById: async (id: string): Promise<Questionnaire> => {
     const res = await axiosInstance.get(`/getQuestionaire/${id}`);
+    console.log(res.data);
     return res.data as Questionnaire;
   },
-  addQuestionnaire: async (questionnaire: QuestionWithCorrectAnswer) => {
+  addQuestionnaire: async (questionnaire: Questionnaire) => {
     const res = await axiosInstance.post("/addQuestionaire", questionnaire);
     return res.data;
   },
