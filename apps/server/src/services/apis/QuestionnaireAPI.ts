@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import {
   IQuestionnaire,
   QuestionnaireSchema,
-} from "./schemas/QuestionnaireSchema";
+} from "../../schemas/QuestionnaireSchema";
 import { Hono } from "hono";
-import { connectMongoose } from "./services/mongoose";
+import { connectMongoose } from "../mongoose";
 
 const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
   connectMongoose();

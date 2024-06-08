@@ -1,5 +1,5 @@
 import axios from "axios";
-import { QuestionWithCorrectAnswer, Questionnaire } from "../types";
+import { Questionnaire } from "../types";
 
 const BASE_URL = "https://api.ducvu.name.vn";
 // const BASE_URL = "http://localhost:3000";

@@ -1,0 +1,10 @@
+- [ ] Add media for each question,
+- [ ] Implement the scoring system
+- [ ] Add a progress bar
+- [ ] Style the quiz interface
+- [ ] Write unit tests for the quiz functionality
+- [devmode] Deploy the quiz application
+- [ ] Check answers and provide feedback
+- [ ] Conduct user testing and gather feedback
+- [ ] Make any necessary improvements based on user feedback
+- [ ] Celebrate the successful completion of the quiz project!
