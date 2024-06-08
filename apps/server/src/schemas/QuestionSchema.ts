@@ -12,4 +12,8 @@ const QuestionSchema = new Schema<IQuestion>({
   correctAnswer: { type: String, required: true },
 });
 
+export type ClientAnswer = Omit<IQuestion, "correctAnswer"> & {
+  currentAnswer: string;
+};
+
 export default QuestionSchema;

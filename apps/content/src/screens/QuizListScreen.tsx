@@ -2,12 +2,13 @@ import { FaShare, FaUser } from "react-icons/fa";
 import { IoIosList } from "react-icons/io";
 import { GiLevelEndFlag } from "react-icons/gi";
 import { AiOutlineTags } from "react-icons/ai";
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { CommonButton } from "../components/common/CommonButton";
 import { useEffect, useState } from "react";
 import { QuizAppAPI } from "../utils/apis/Questionnaire";
 import { Questionnaire } from "../utils/types";
+import { FiEdit } from "react-icons/fi";
 
 const QuizListScreen = () => {
   const [, navigate] = useLocation();
@@ -18,6 +19,10 @@ const QuizListScreen = () => {
   };
   const navigateToModifyQuiz = (id: string) => {
     navigate(`/admin/quiz/${id}`);
+  };
+
+  const navigateToPlayQuiz = (id: string) => {
+    navigate(`/play/${id}`);
   };
 
   const fetchAllQuestionnaire = async () => {
@@ -54,9 +59,6 @@ const QuizListScreen = () => {
         <div className="flex w-full flex-col gap-5">
           {questionnaires.map((exam) => (
             <div
-              onClick={() => {
-                navigateToModifyQuiz(exam._id);
-              }}
               key={exam._id}
               className="flex gap-5 bg-white rounded-md items-center px-3 py-2 shadow-md w-full cursor-pointer hover:shadow-lg transition hover:bg-slate-100"
             >
@@ -87,11 +89,24 @@ const QuizListScreen = () => {
                     Author: {exam.createdBy} · {exam.createdAt}
                   </div>
                   <div className="flex gap-3 font-medium items-center">
+                    <button
+                      onClick={() => {
+                        navigateToModifyQuiz(exam._id);
+                      }}
+                      className="flex items-center gap-1 bg-yellow-200 px-2 py-1 rounded-md hover:bg-yellow-400 transition w-24 justify-center"
+                    >
+                      <FiEdit />
+                      Edit
+                    </button>
                     <button className="flex items-center gap-1 bg-blue-200 px-2 py-1 rounded-md hover:bg-blue-400 transition w-24 justify-center">
                       <FaShare />
                       Share
                     </button>
-                    <Link href={`/play/${exam._id}`}>
+                    <div
+                      onClick={() => {
+                        navigateToPlayQuiz(exam._id);
+                      }}
+                    >
                       <button className="flex items-center justify-center bg-green-600 text-white px-2 py-1 rounded-md hover:bg-green-700 transition w-24">
                         <MdOutlineSubdirectoryArrowRight
                           size={18}
@@ -99,7 +114,7 @@ const QuizListScreen = () => {
                         />
                         <div className="relative -left-1">Play</div>
                       </button>
-                    </Link>
+                    </div>
                   </div>
                 </div>
               </div>

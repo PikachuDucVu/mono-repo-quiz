@@ -36,7 +36,7 @@ const NewQuizScreen = () => {
       return;
     }
 
-    const data = await QuizAppAPI.getQuestionnaireById(params.id);
+    const data = await QuizAppAPI.getQuestionnaireToEditById(params.id);
     setQuestionnaire(data);
     if (data.questions.length > 0) {
       setCurrentQuestionIndex(0);

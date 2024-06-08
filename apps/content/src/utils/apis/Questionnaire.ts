@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Questionnaire } from "../types";
+import { QuestionItem, Questionnaire } from "../types";
 
 const BASE_URL = "https://api.ducvu.name.vn";
 // const BASE_URL = "http://localhost:3000";
@@ -15,10 +15,14 @@ export const QuizAppAPI = {
     const res = await axiosInstance.get("/getQuestionaire");
     return res.data as Questionnaire[];
   },
-  getQuestionnaireById: async (id: string): Promise<Questionnaire> => {
-    const res = await axiosInstance.get(`/getQuestionaire/${id}`);
+  getQuestionnaireToEditById: async (id: string): Promise<Questionnaire> => {
+    const res = await axiosInstance.get(`/getQuestionaireToEdit/${id}`);
     console.log(res.data);
     return res.data as Questionnaire;
+  },
+  examQuestionaire: async (id: string): Promise<QuestionItem[]> => {
+    const res = await axiosInstance.get(`/examQuestionaire/${id}`);
+    return res.data as QuestionItem[];
   },
   addQuestionnaire: async (questionnaire: Questionnaire) => {
     const res = await axiosInstance.post("/addQuestionaire", questionnaire);
@@ -35,6 +39,11 @@ export const QuizAppAPI = {
     );
     return res.data;
   },
-  // TODO: "Implement submitAnswer",
-  submitAnswer: async (id: string, answer: string) => {},
+  submitAnswer: async (
+    id: string,
+    answerData: QuestionItem[]
+  ): Promise<{ score: string }> => {
+    const res = await axiosInstance.post(`/submitAnswer/${id}`, answerData);
+    return res.data as { score: string };
+  },
 };

@@ -1,23 +1,35 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Questionaire from "../components/Questionaire";
 import { QuestionItem } from "../utils/types";
 import ShowScore from "../components/ShowScore";
-const correctAnswer = ["Hanoi", "Hanoi", "Hanoi", "Hanoi"];
+import { QuizAppAPI } from "../utils/apis/Questionnaire";
+import { AppRouterParam } from "../App";
+import { useParams } from "wouter";
 
 const ExamScreen = () => {
   const [submitted, setSubmitted] = useState(false);
   const [totalScore, setTotalScore] = useState(0);
+  const [questionnaire, setQuestionnaire] = useState<QuestionItem[]>([]);
 
-  const checkAnswer = (questionaire: QuestionItem[]) => {
-    let score = 0;
-    questionaire.forEach((question, index) => {
-      if (question.currentAnswer === correctAnswer[index]) {
-        score++;
-      }
-    });
-    setTotalScore(score);
+  const params = useParams<AppRouterParam>();
+
+  const onSubmit = async (answerData: QuestionItem[]) => {
+    const { score } = await QuizAppAPI.submitAnswer(params.id, answerData);
+    setTotalScore(parseInt(score));
     setSubmitted(true);
   };
+
+  const fetchQuestionaire = useCallback(async () => {
+    const data = await QuizAppAPI.examQuestionaire(params.id);
+    if (!data) {
+      return;
+    }
+    setQuestionnaire(data);
+  }, [params.id]);
+
+  useEffect(() => {
+    fetchQuestionaire();
+  }, [fetchQuestionaire]);
 
   return (
     <div
@@ -26,7 +38,11 @@ const ExamScreen = () => {
     >
       <div className="flex flex-col bg-white p-7 rounded-2xl w-[80%] h-[75%] relative -top-8">
         {!submitted ? (
-          <Questionaire onSubmit={checkAnswer} />
+          <Questionaire
+            questionnaire={questionnaire}
+            onSubmit={onSubmit}
+            onChange={setQuestionnaire}
+          />
         ) : (
           <ShowScore score={totalScore} />
         )}
