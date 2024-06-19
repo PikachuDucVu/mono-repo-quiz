@@ -1,8 +1,8 @@
 import axios from "axios";
 import { QuestionItem, Questionnaire } from "../types";
 
-// const BASE_URL = "https://api.ducvu.name.vn";
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://api.ducvu.name.vn";
+// const BASE_URL = "http://localhost:3000";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
