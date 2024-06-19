@@ -5,6 +5,7 @@ import { useState } from "react";
 import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
 import { MdEmail } from "react-icons/md";
 import { GiConfirmed } from "react-icons/gi";
+import { Link, useLocation } from "wouter";
 
 const RegisterScreen = () => {
   const [username, setUsername] = useState("");
@@ -12,6 +13,7 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [, navigate] = useLocation();
   const handleAuth = async () => {
     if (!email || !password || !username || !confirmPassword) {
       alert("Please fill in all fields");
@@ -36,9 +38,8 @@ const RegisterScreen = () => {
     );
     if (token) {
       alert("Register success");
+      navigate("/");
     }
-
-    console.log(token);
   };
 
   return (
@@ -90,9 +91,12 @@ const RegisterScreen = () => {
           <CommonButton text="Register" onClick={handleAuth} />
         </div>
 
-        <div className="text-xs text-gray-500 text-center w-full cursor-pointer absolute bottom-10">
+        <Link
+          to="/login"
+          className="text-xs text-gray-500 text-center w-full cursor-pointer absolute bottom-10"
+        >
           Already have an account? Login
-        </div>
+        </Link>
       </div>
     </div>
   );

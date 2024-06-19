@@ -1,8 +1,8 @@
 import axios from "axios";
 import { QuestionItem, Questionnaire } from "../types";
+import Cookies from "js-cookie";
 
-const BASE_URL = "https://api.ducvu.name.vn";
-// const BASE_URL = "http://localhost:3000";
+const BASE_URL = process.env.BASE_URL;
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -16,6 +16,9 @@ export const QuizAppAPI = {
     password: string
   ): Promise<{ payload: string; token: string }> => {
     const res = await axiosInstance.post("/login", { email, password });
+    if (res.data.token) {
+      Cookies.set("token", res.data.token, {});
+    }
     return res.data as { payload: string; token: string };
   },
   registerWithEmailandPassword: async (
@@ -28,6 +31,9 @@ export const QuizAppAPI = {
       email,
       password,
     });
+    if (res.data.token) {
+      Cookies.set("token", res.data.token, {});
+    }
     return res.data as { payload: string; token: string };
   },
 

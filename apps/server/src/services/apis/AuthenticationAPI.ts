@@ -7,15 +7,15 @@ import { bearerAuth } from "hono/bearer-auth";
 import bcrypt from "bcryptjs";
 
 const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
-  app.use(
-    "/user/*",
-    bearerAuth({
-      verifyToken: async (token, c) => {
-        console.log("verifyToken", token, getCookie(c, "token"));
-        return token === getCookie(c, "token");
-      },
-    })
-  );
+  // app.use(
+  //   "/user/*",
+  //   bearerAuth({
+  //     verifyToken: async (token, c) => {
+  //       console.log("verifyToken", token, getCookie(c, "token"));
+  //       return token === getCookie(c, "token");
+  //     },
+  //   })
+  // );
 
   app.post("/register", async (c) => {
     const body = await c.req.json();
@@ -30,12 +30,12 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
       return c.json({ message: "Invalid email!" }, 400);
     }
 
-    // const User = mongoose.model("User", UserSchema);
+    const User = mongoose.model("User", UserSchema);
 
-    // const existedUser = await User.findOne({ email });
-    // if (existedUser) {
-    //   return c.json({ message: "User already exsits with this email!" }, 400);
-    // }
+    const existedUser = await User.findOne({ email });
+    if (existedUser) {
+      return c.json({ message: "User already exsits with this email!" }, 400);
+    }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -46,15 +46,17 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
       password: hashedPassword,
     };
 
-    // await User.create(user);
-
     const payload = {
       ...user,
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET);
+    const token = jwt.sign(payload, "dcm", {
+      algorithm: "HS256",
+    });
     setCookie(c, "token", token);
+
+    await User.create(user);
 
     return c.json({
       payload,
@@ -65,32 +67,29 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
   app.post("/login", async (c) => {
     const body = await c.req.json();
     const { email, password } = body;
-    // const email = "test@gmail.com";
-    // const password = "123456";
-
     if (!email || !password) {
       return c.json({ message: "Invalid data!" }, 400);
     }
 
-    // const User = mongoose.model("User", UserSchema);
+    const User = mongoose.model("User", UserSchema);
 
-    // const user = await User.findOne({ email });
-    // if (!user) {
-    //   return c.json({ message: "User not found!" }, 404);
-    // }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return c.json({ message: "User not found!" }, 404);
+    }
 
-    // const isMatch = await bcrypt.compare(password, user.password);
-    // if (!isMatch) {
-    //   return c.json({ message: "Invalid password!" }, 400);
-    // }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return c.json({ message: "Invalid password!" }, 400);
+    }
 
     const payload = {
       email,
       password,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
     };
-
-    const token = jwt.sign(payload, process.env.JWT_SECRET);
+    const token = jwt.sign(payload, process.env.JWT_SECRET.toString(), {
+      algorithm: "HS256",
+    });
     setCookie(c, "token", token);
 
     return c.json({ payload, token });
