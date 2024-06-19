@@ -6,6 +6,7 @@ import ExamScreen from "./screens/ExamScreen";
 import NewQuizScreen from "./screens/NewQuizScreen";
 import { NormalScreen } from "./components/NormalScreen";
 import Header from "./components/Header";
+import RegisterScreen from "./screens/RegisterScreen";
 
 export type AppRouterParam = {
   id: string;
@@ -21,6 +22,7 @@ function App() {
         <Route path="/admin/quiz/" component={NewQuizScreen} />
         <Route path="/admin/quiz/:id" component={NewQuizScreen} />
         <Route path="/login" component={LoginScreen} />
+        <Route path="/register" component={RegisterScreen} />
         <Route path="/play/:id" component={ExamScreen} />
       </Switch>
     </NormalScreen>

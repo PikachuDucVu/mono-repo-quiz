@@ -6,7 +6,7 @@ import { useLocation } from "wouter";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { CommonButton } from "../components/common/CommonButton";
 import { useEffect, useState } from "react";
-import { QuizAppAPI } from "../utils/apis/Questionnaire";
+import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
 import { Questionnaire } from "../utils/types";
 import { FiEdit } from "react-icons/fi";
 

@@ -10,7 +10,7 @@ import { ClientAnswer } from "../../schemas/QuestionSchema";
 const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
   connectMongoose();
 
-  app.post("/addQuestionaire", async (c) => {
+  app.post("user/addQuestionaire", async (c) => {
     const body = (await c.req.json()) as IQuestionnaire;
     console.log("body", body);
 
@@ -44,18 +44,16 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     };
     await Questionnaire.create(questionaire);
 
-    console.log("POST /addQuestionaire", body.title, new Date());
     return c.text("Create questionaire successfully!", 201);
   });
 
   app.get("/getQuestionaire", async (c) => {
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
     const questionaires = await Questionnaire.find();
-    console.log("GET /getQuestionaire", new Date());
     return c.json(questionaires);
   });
 
-  app.get("/getQuestionaireToEdit/:id", async (c) => {
+  app.get("user/getQuestionaireToEdit/:id", async (c) => {
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
     const id = c.req.param("id");
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -63,7 +61,6 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     }
 
     const questionaire = await Questionnaire.findById(id);
-    console.log("GET /getQuestionaire/", id, new Date());
 
     if (!questionaire) {
       return c.text("Questionaire not found", 404);
@@ -71,7 +68,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     return c.json(questionaire);
   });
 
-  app.get("/examQuestionaire/:id", async (c) => {
+  app.get("user/examQuestionaire/:id", async (c) => {
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
     const id = c.req.param("id");
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -79,7 +76,6 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     }
 
     const questionaire = await Questionnaire.findById(id);
-    console.log("GET /examQuestionaire/", id, new Date());
 
     if (!questionaire) {
       return c.text("Not found", 404);
@@ -93,7 +89,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     return c.json(filteredQuestionaire);
   });
 
-  app.post("/submitAnswer/:id", async (c) => {
+  app.post("user/submitAnswer/:id", async (c) => {
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
     const id = c.req.param("id");
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -102,7 +98,6 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
 
     const body = (await c.req.json()) as ClientAnswer[];
     const questionaire = await Questionnaire.findById(id);
-    console.log("POST /submitAnswer/", id, new Date());
 
     if (!questionaire) {
       return c.text("Not found", 404);
@@ -124,7 +119,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     return c.json({ score });
   });
 
-  app.delete("/deleteQuestionaire/:id", async (c) => {
+  app.delete("user/deleteQuestionaire/:id", async (c) => {
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
     const id = c.req.param("id");
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -132,7 +127,6 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     }
 
     const questionaire = await Questionnaire.findByIdAndDelete(id);
-    console.log("DELETE /deleteQuestionaire/", id, new Date());
 
     if (!questionaire) {
       return c.text("Questionaire not found", 404);
@@ -140,7 +134,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     return c.text("Delete questionaire successfully!", 200);
   });
 
-  app.put("/updateQuestionaire/:id", async (c) => {
+  app.put("user/updateQuestionaire/:id", async (c) => {
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
     const id = c.req.param("id");
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -177,7 +171,6 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     };
     await Questionnaire.findByIdAndUpdate(id, questionaire);
 
-    console.log("PUT /updateQuestionaire/", id, new Date());
     return c.text("Update questionaire successfully!", 200);
   });
 };

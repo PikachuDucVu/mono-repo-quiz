@@ -1,8 +1,8 @@
 import axios from "axios";
 import { QuestionItem, Questionnaire } from "../types";
 
-const BASE_URL = "https://api.ducvu.name.vn";
-// const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://api.ducvu.name.vn";
+const BASE_URL = "http://localhost:3000";
 
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
@@ -11,6 +11,26 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 export const QuizAppAPI = {
+  loginWithEmailandPassword: async (
+    email: string,
+    password: string
+  ): Promise<{ payload: string; token: string }> => {
+    const res = await axiosInstance.post("/login", { email, password });
+    return res.data as { payload: string; token: string };
+  },
+  registerWithEmailandPassword: async (
+    username: string,
+    email: string,
+    password: string
+  ): Promise<{ payload: string; token: string }> => {
+    const res = await axiosInstance.post("/register", {
+      username,
+      email,
+      password,
+    });
+    return res.data as { payload: string; token: string };
+  },
+
   getAllQuestionnaires: async (): Promise<Questionnaire[]> => {
     const res = await axiosInstance.get("/getQuestionaire");
     return res.data as Questionnaire[];

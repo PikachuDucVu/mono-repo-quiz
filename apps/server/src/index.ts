@@ -2,9 +2,13 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { CustomAPI } from "./services/apis/CustomAPI";
 import QuestionnaireAPI from "./services/apis/QuestionnaireAPI";
+import { logger } from "hono/logger";
+import AuthenticationAPI from "./services/apis/AuthenticationAPI";
 
 const app = new Hono();
 app.use(cors());
+app.use(logger());
+
 const currentServerTime = new Date().toISOString();
 
 app.get("/", (c) => {
@@ -42,6 +46,7 @@ app.notFound((c) => {
 });
 
 QuestionnaireAPI(app, currentServerTime);
+AuthenticationAPI(app, currentServerTime);
 CustomAPI(app, currentServerTime);
 
 export { app, currentServerTime };

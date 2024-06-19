@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { CommonButton } from "../components/common/CommonButton";
 import { useLocation, useParams } from "wouter";
 import { AppRouterParam } from "../App";
-import { QuizAppAPI } from "../utils/apis/Questionnaire";
+import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
 import { Questionnaire } from "../utils/types";
 import { IoMdRemoveCircle } from "react-icons/io";
 import InteractiveQuestionnaire from "../components/RenderQuestion";

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Questionaire from "../components/Questionaire";
 import { QuestionItem } from "../utils/types";
 import ShowScore from "../components/ShowScore";
-import { QuizAppAPI } from "../utils/apis/Questionnaire";
+import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
 import { AppRouterParam } from "../App";
 import { useParams } from "wouter";
 
