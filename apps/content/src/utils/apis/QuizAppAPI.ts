@@ -36,25 +36,25 @@ export const QuizAppAPI = {
     return res.data as Questionnaire[];
   },
   getQuestionnaireToEditById: async (id: string): Promise<Questionnaire> => {
-    const res = await axiosInstance.get(`/getQuestionaireToEdit/${id}`);
+    const res = await axiosInstance.get(`user/getQuestionaireToEdit/${id}`);
     console.log(res.data);
     return res.data as Questionnaire;
   },
   examQuestionaire: async (id: string): Promise<QuestionItem[]> => {
-    const res = await axiosInstance.get(`/examQuestionaire/${id}`);
+    const res = await axiosInstance.get(`user/examQuestionaire/${id}`);
     return res.data as QuestionItem[];
   },
   addQuestionnaire: async (questionnaire: Questionnaire) => {
-    const res = await axiosInstance.post("/addQuestionaire", questionnaire);
+    const res = await axiosInstance.post("user/addQuestionaire", questionnaire);
     return res.data;
   },
   deleteQuestionnaire: async (id: string) => {
-    const res = await axiosInstance.delete(`/deleteQuestionaire/${id}`);
+    const res = await axiosInstance.delete(`user/deleteQuestionaire/${id}`);
     return res.data;
   },
   updateQuestionnaire: async (id: string, questionnaire: Questionnaire) => {
     const res = await axiosInstance.put(
-      `/updateQuestionaire/${id}`,
+      `user/updateQuestionaire/${id}`,
       questionnaire
     );
     return res.data;
@@ -63,7 +63,7 @@ export const QuizAppAPI = {
     id: string,
     answerData: QuestionItem[]
   ): Promise<{ score: string }> => {
-    const res = await axiosInstance.post(`/submitAnswer/${id}`, answerData);
+    const res = await axiosInstance.post(`user/submitAnswer/${id}`, answerData);
     return res.data as { score: string };
   },
 };
