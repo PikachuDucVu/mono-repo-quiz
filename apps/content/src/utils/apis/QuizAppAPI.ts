@@ -91,7 +91,7 @@ export const QuizAppAPI = {
 
     const res = await axiosInstance.get(`user/getQuestionaireToEdit/${id}`, {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZW1haWwiOiJkY21AZ21haWwuY29tIiwiaWF0IjoxNzE5MzQzNjUyfQ.jECXeehJg-ElQ_DYfcGNBHXUPTEyLSDswdrvJB60ix4`,
+        Authorization: `Bearer ${token}`,
       },
     });
     return res.data as Questionnaire;
