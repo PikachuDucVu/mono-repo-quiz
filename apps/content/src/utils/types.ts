@@ -17,3 +17,9 @@ export type Questionnaire = {
   createdAt?: string;
   createdBy?: string;
 };
+
+export type User = {
+  username: string;
+  email: string;
+  isAdmin?: boolean;
+};

@@ -3,33 +3,51 @@ import { RiLockPasswordFill } from "react-icons/ri"; // Add this line
 import { CommonButton } from "../components/common/CommonButton";
 import { useState } from "react";
 import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
+import { toast } from "react-toastify";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [, navigate] = useLocation();
-
   const handleAuth = async () => {
     if (!email || !password) {
-      alert("Please fill in all fields");
+      toast("Please fill all the fields", {
+        type: "error",
+        autoClose: 2000,
+      });
       return;
     }
 
     const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (!regexEmail.test(email)) {
-      alert("Invalid email");
+      toast("Please enter a valid email", {
+        type: "error",
+        autoClose: 2000,
+      });
       return;
     }
 
-    const { token } = await QuizAppAPI.loginWithEmailandPassword(
-      email,
-      password
-    );
-    if (token) {
-      alert("Login success");
-      navigate("/");
+    try {
+      const { token } = await QuizAppAPI.loginWithEmailandPassword(
+        email,
+        password
+      );
+      if (token) {
+        toast("Login successful! Redirecting...", {
+          type: "success",
+          autoClose: 2000,
+          onClose: () => {
+            // Redirect to admin page
+            window.location.href = "/admin";
+          },
+        });
+      }
+    } catch (error) {
+      toast(`${error.response.data.message || "Failed to login"}`, {
+        type: "error",
+        autoClose: 2000,
+      });
     }
   };
 
@@ -56,6 +74,7 @@ const LoginScreen = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           <div className="text-xs text-gray-500 text-right w-full cursor-pointer">
             Forgot password?
           </div>
@@ -75,7 +94,6 @@ const LoginScreen = () => {
             />
           </div>
         </div>
-
         <Link
           to="/register"
           className="text-xs text-gray-500 text-center w-full cursor-pointer absolute bottom-10"

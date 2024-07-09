@@ -5,14 +5,19 @@ import { AiOutlineTags } from "react-icons/ai";
 import { useLocation } from "wouter";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { CommonButton } from "../components/common/CommonButton";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
-import { Questionnaire } from "../utils/types";
+import { Questionnaire, User } from "../utils/types";
 import { FiEdit } from "react-icons/fi";
+import { AuthContext } from "../context/authen";
 
 const QuizListScreen = () => {
   const [, navigate] = useLocation();
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
+  const { userInfo, isLoggedIn } = useContext<{
+    userInfo: User;
+    isLoggedIn: boolean;
+  }>(AuthContext);
 
   const navigateToCreateNewQuiz = () => {
     navigate(`/admin/quiz/`);
@@ -89,15 +94,18 @@ const QuizListScreen = () => {
                     Author: {exam.createdBy} · {exam.createdAt}
                   </div>
                   <div className="flex gap-3 font-medium items-center">
-                    <button
-                      onClick={() => {
-                        navigateToModifyQuiz(exam._id);
-                      }}
-                      className="flex items-center gap-1 bg-yellow-200 px-2 py-1 rounded-md hover:bg-yellow-400 transition w-24 justify-center"
-                    >
-                      <FiEdit />
-                      Edit
-                    </button>
+                    {/* //TODO: Owner of the quiz can modify the quiz */}
+                    {userInfo?.isAdmin && (
+                      <button
+                        onClick={() => {
+                          navigateToModifyQuiz(exam._id);
+                        }}
+                        className="flex items-center gap-1 bg-yellow-200 px-2 py-1 rounded-md hover:bg-yellow-400 transition w-24 justify-center"
+                      >
+                        <FiEdit />
+                        Edit
+                      </button>
+                    )}
                     <button className="flex items-center gap-1 bg-blue-200 px-2 py-1 rounded-md hover:bg-blue-400 transition w-24 justify-center">
                       <FaShare />
                       Share
@@ -107,7 +115,9 @@ const QuizListScreen = () => {
                         navigateToPlayQuiz(exam._id);
                       }}
                     >
-                      <button className="flex items-center justify-center bg-green-600 text-white px-2 py-1 rounded-md hover:bg-green-700 transition w-24">
+                      <button
+                        className={`flex items-center justify-center ${isLoggedIn ? "bg-green-600 hover:bg-green-700" : "bg-gray-300"} text-white px-2 py-1 rounded-md transition w-24`}
+                      >
                         <MdOutlineSubdirectoryArrowRight
                           size={18}
                           className="relative -left-1"

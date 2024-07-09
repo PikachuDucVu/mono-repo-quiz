@@ -1,5 +1,5 @@
 import axios from "axios";
-import { QuestionItem, Questionnaire } from "../types";
+import { QuestionItem, Questionnaire, User } from "../types";
 import Cookies from "js-cookie";
 
 const BASE_URL = process.env.BASE_URL;
@@ -7,34 +7,79 @@ const BASE_URL = process.env.BASE_URL;
 const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
   config.baseURL = BASE_URL;
+  config.headers["Content-Type"] = "application/json";
+  config.withCredentials = true;
   return config;
 });
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = Cookies.get("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      Cookies.remove("token");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const QuizAppAPI = {
   loginWithEmailandPassword: async (
     email: string,
     password: string
-  ): Promise<{ payload: string; token: string }> => {
+  ): Promise<{ token: string }> => {
     const res = await axiosInstance.post("/login", { email, password });
     if (res.data.token) {
-      Cookies.set("token", res.data.token, {});
+      Cookies.set("token", res.data.token, {
+        path: "/",
+      });
     }
-    return res.data as { payload: string; token: string };
+    return res.data as { token: string };
   },
+
+  verifyToken: async (): Promise<{ payload: User; message?: string }> => {
+    const token = Cookies.get("token");
+    console.log("token", token);
+    const res = await axiosInstance.get("/verifyToken", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data as { payload: User; error?: string };
+  },
+
   registerWithEmailandPassword: async (
     username: string,
     email: string,
     password: string
-  ): Promise<{ payload: string; token: string }> => {
+  ): Promise<{ token: string }> => {
     const res = await axiosInstance.post("/register", {
       username,
       email,
       password,
     });
+
     if (res.data.token) {
-      Cookies.set("token", res.data.token, {});
+      Cookies.set("token", res.data.token, {
+        path: "/",
+      });
     }
-    return res.data as { payload: string; token: string };
+    return res.data as { token: string };
   },
 
   getAllQuestionnaires: async (): Promise<Questionnaire[]> => {
@@ -42,8 +87,13 @@ export const QuizAppAPI = {
     return res.data as Questionnaire[];
   },
   getQuestionnaireToEditById: async (id: string): Promise<Questionnaire> => {
-    const res = await axiosInstance.get(`user/getQuestionaireToEdit/${id}`);
-    console.log(res.data);
+    const token = Cookies.get("token");
+
+    const res = await axiosInstance.get(`user/getQuestionaireToEdit/${id}`, {
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZW1haWwiOiJkY21AZ21haWwuY29tIiwiaWF0IjoxNzE5MzQzNjUyfQ.jECXeehJg-ElQ_DYfcGNBHXUPTEyLSDswdrvJB60ix4`,
+      },
+    });
     return res.data as Questionnaire;
   },
   examQuestionaire: async (id: string): Promise<QuestionItem[]> => {

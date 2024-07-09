@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import {
   IQuestionnaire,
@@ -6,14 +7,24 @@ import {
 import { Hono } from "hono";
 import { connectMongoose } from "../mongoose";
 import { ClientAnswer } from "../../schemas/QuestionSchema";
+import { bearerAuth } from "hono/bearer-auth";
+import { getCookie } from "hono/cookie";
+import UserSchema from "../../schemas/UserSchema";
 
 const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
   connectMongoose();
+  app.use(
+    "/user/*",
+    bearerAuth({
+      verifyToken: async (token, c) => {
+        return token === getCookie(c, "token");
+      },
+    })
+  );
 
   app.post("user/addQuestionaire", async (c) => {
     const body = (await c.req.json()) as IQuestionnaire;
-    console.log("body", body);
-
+    const token = getCookie(c, "token");
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
 
     if (!body.title || !body.questions) {
@@ -35,12 +46,28 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
       }
     }
 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET.toString()) as {
+      email: string;
+      username: string;
+    };
+
+    if (!decoded.email) {
+      return c.text("Invalid token", 400);
+    }
+
+    const User = mongoose.model("User", UserSchema);
+    const user = await User.findOne({ email: decoded.email });
+    if (!user) {
+      return c.text("User not found", 404);
+    }
+    const userObjectID = user._id;
+
     const questionaire = {
       title: body.title,
       questions: body.questions,
       tags: body.tags,
       level: body.level,
-      createdBy: new mongoose.Types.ObjectId(),
+      createdBy: userObjectID,
     };
     await Questionnaire.create(questionaire);
 
@@ -135,10 +162,31 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
   });
 
   app.put("user/updateQuestionaire/:id", async (c) => {
+    const token = getCookie(c, "token");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET.toString()) as {
+      email: string;
+      username: string;
+    };
+
+    if (!decoded.email) {
+      return c.text("Invalid token", 400);
+    }
+    const User = mongoose.model("User", UserSchema);
+    const user = await User.findOne({ email: decoded.email });
+    if (!user) {
+      return c.text("User not found", 404);
+    }
+    const userObjectID = user._id;
+
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
-    const id = c.req.param("id");
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return c.text("Invalid id", 400);
+    const QuestionaireId = c.req.param("id");
+
+    const existQuestionaire = await Questionnaire.findById(QuestionaireId);
+    if (!existQuestionaire) {
+      return c.text("Questionaire not found", 404);
+    }
+    if (existQuestionaire.createdBy.toString() !== userObjectID.toString()) {
+      return c.text("You are not authorized to update this questionaire", 401);
     }
 
     const body = (await c.req.json()) as IQuestionnaire;
@@ -162,14 +210,12 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
       }
     }
 
-    const questionaire = {
+    await Questionnaire.findByIdAndUpdate(QuestionaireId, {
       title: body.title,
       questions: body.questions,
       tags: body.tags.length ? body.tags : [],
       level: body.level,
-      createdBy: new mongoose.Types.ObjectId(),
-    };
-    await Questionnaire.findByIdAndUpdate(id, questionaire);
+    });
 
     return c.text("Update questionaire successfully!", 200);
   });

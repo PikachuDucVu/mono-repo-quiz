@@ -3,20 +3,9 @@ import mongoose from "mongoose";
 import UserSchema from "../../schemas/UserSchema";
 import jwt from "jsonwebtoken";
 import { setCookie, getCookie } from "hono/cookie";
-import { bearerAuth } from "hono/bearer-auth";
 import bcrypt from "bcryptjs";
 
 const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
-  // app.use(
-  //   "/user/*",
-  //   bearerAuth({
-  //     verifyToken: async (token, c) => {
-  //       console.log("verifyToken", token, getCookie(c, "token"));
-  //       return token === getCookie(c, "token");
-  //     },
-  //   })
-  // );
-
   app.post("/register", async (c) => {
     const body = await c.req.json();
     const { username, email, password } = body;
@@ -47,11 +36,11 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
     };
 
     const payload = {
-      ...user,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
+      username: user.username,
+      email: user.email,
     };
 
-    const token = jwt.sign(payload, "dcm", {
+    const token = jwt.sign(payload, process.env.JWT_SECRET.toString(), {
       algorithm: "HS256",
     });
     setCookie(c, "token", token);
@@ -59,7 +48,6 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
     await User.create(user);
 
     return c.json({
-      payload,
       token,
     });
   });
@@ -75,7 +63,12 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return c.json({ message: "User not found!" }, 404);
+      return c.json(
+        {
+          message: "Incorrect username or password. Please try again!",
+        },
+        404
+      );
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -84,15 +77,39 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
     }
 
     const payload = {
-      email,
-      password,
+      username: user.username,
+      email: user.email,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET.toString(), {
       algorithm: "HS256",
     });
     setCookie(c, "token", token);
+    return c.json({ token });
+  });
 
-    return c.json({ payload, token });
+  app.use("verifyToken", async (c) => {
+    const token = getCookie(c, "token");
+    if (!token) {
+      return c.json({ message: "No token provided" }, 401);
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET.toString()) as {
+        email: string;
+        username: string;
+      };
+      const User = mongoose.model("User", UserSchema);
+      const user = await User.findOne({ email: decoded.email });
+      return c.json({
+        payload: {
+          username: user.username,
+          email: user.email,
+          isAdmin: user.isAdmin,
+        },
+      });
+    } catch (error) {
+      return c.json({ message: "Token is not valid" }, 401);
+    }
   });
 };
 

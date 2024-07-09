@@ -6,6 +6,7 @@ import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
 import { MdEmail } from "react-icons/md";
 import { GiConfirmed } from "react-icons/gi";
 import { Link, useLocation } from "wouter";
+import { toast } from "react-toastify";
 
 const RegisterScreen = () => {
   const [username, setUsername] = useState("");
@@ -13,32 +14,52 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [, navigate] = useLocation();
   const handleAuth = async () => {
     if (!email || !password || !username || !confirmPassword) {
-      alert("Please fill in all fields");
+      toast("Please fill in all fields", {
+        type: "error",
+        autoClose: 2000,
+      });
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Password does not match");
+      toast("Passwords do not match", {
+        type: "error",
+        autoClose: 2000,
+      });
       return;
     }
 
     const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     if (!regexEmail.test(email)) {
-      alert("Invalid email");
+      toast("Invalid email", {
+        type: "error",
+        autoClose: 2000,
+      });
       return;
     }
 
-    const { token } = await QuizAppAPI.registerWithEmailandPassword(
-      username,
-      email,
-      password
-    );
-    if (token) {
-      alert("Register success");
-      navigate("/");
+    try {
+      const { token } = await QuizAppAPI.registerWithEmailandPassword(
+        username,
+        email,
+        password
+      );
+      if (token) {
+        toast("Registration successful! Redirecting...", {
+          type: "success",
+          autoClose: 2000,
+          onClose: () => {
+            window.location.href = "/admin";
+          },
+        });
+      }
+    } catch (error) {
+      toast(`${error.response.data.message || "Failed to register"}`, {
+        type: "error",
+        autoClose: 2000,
+      });
     }
   };
 

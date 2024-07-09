@@ -7,6 +7,7 @@ import { Questionnaire } from "../utils/types";
 import { IoMdRemoveCircle } from "react-icons/io";
 import InteractiveQuestionnaire from "../components/RenderQuestion";
 import { MultilineTextInput } from "../components/common/MultilineTextInput";
+import { toast } from "react-toastify";
 
 const NewQuizScreen = () => {
   const [questionnaire, setQuestionnaire] = useState<
@@ -130,24 +131,21 @@ const NewQuizScreen = () => {
   };
 
   const onSubmit = async () => {
-    console.log(questionnaire);
     if (!params.id) {
       const res = await QuizAppAPI.addQuestionnaire(questionnaire);
-      alert(res);
-      console.log("dcm");
+      toast.success(res);
       nagivate("/admin");
       return;
     }
     const res = await QuizAppAPI.updateQuestionnaire(params.id, questionnaire);
-    console.log("submit", questionnaire);
-    alert(res);
+    toast.success(res);
     nagivate("/admin");
   };
 
   const onDeleteQuestionaire = async () => {
     if (!confirm("Are you sure you want to delete this questionnaire?")) return;
     const res = await QuizAppAPI.deleteQuestionnaire(params.id);
-    alert(res);
+    toast.success(res);
     nagivate("/admin");
   };
   return (

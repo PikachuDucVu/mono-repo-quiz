@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Lottie from "lottie-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useLocation } from "wouter";
 import logoImg from "/logoApp.png";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import { AuthContext } from "../context/authen";
 
 const Header = () => {
   const [WriteBoardAnim, setWriteBoardAnim] = useState();
+
+  const { userInfo, isLoggedIn, setLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
     import("../animations/WriteBoardAnim.json").then((data: any) => {
@@ -27,7 +32,8 @@ const Header = () => {
             />
             <img src={logoImg} />
           </Link>
-          {location !== "/login" && (
+
+          {location !== "/login" && location !== "/register" && !isLoggedIn && (
             <div className="hidden lg:flex gap-5 items-center">
               <Link
                 className="px-5 py-2 border-yellow-600 border font-bold"
@@ -35,6 +41,36 @@ const Header = () => {
               >
                 Login / Register
               </Link>
+            </div>
+          )}
+
+          {location !== "/login" && location !== "/register" && isLoggedIn && (
+            <div className="hidden md:flex gap-5 items-center">
+              <div className="flex items-center gap-2">
+                <img
+                  src="https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png"
+                  className="w-10 h-10 rounded-full"
+                />
+                <div className="flex flex-col items-start">
+                  <div className="font-bold">{userInfo?.username}</div>
+                  <div className="text-xs text-gray-500">{userInfo?.email}</div>
+                </div>
+              </div>
+              <div>
+                <button
+                  onClick={() => {
+                    Cookies.remove("token");
+                    setLoggedIn(false);
+                    toast("Logout successful!", {
+                      type: "success",
+                      autoClose: 2000,
+                    });
+                  }}
+                  className="px-5 py-2 border-yellow-600 border font-bold"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           )}
         </div>
