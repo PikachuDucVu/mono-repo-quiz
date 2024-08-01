@@ -7,7 +7,10 @@ export type IQuestionnaire = {
   level: "Easy" | "Medium" | "Hard";
   tags: string[];
   createdAt: Date;
-  createdBy: Types.ObjectId;
+  createdBy: {
+    uid: Types.ObjectId;
+    username: string;
+  };
 };
 
 export const QuestionnaireSchema = new Schema<IQuestionnaire>({
@@ -16,5 +19,12 @@ export const QuestionnaireSchema = new Schema<IQuestionnaire>({
   level: { type: String, required: true },
   tags: { type: [String], required: true },
   createdAt: { type: Date, default: Date.now },
-  createdBy: { type: Schema.Types.ObjectId, required: true, index: true },
+  createdBy: {
+    type: {
+      uid: Schema.Types.ObjectId,
+      username: String,
+    },
+    required: true,
+    index: true,
+  },
 });

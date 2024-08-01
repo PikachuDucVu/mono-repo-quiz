@@ -13,7 +13,7 @@ const QuestionSchema = new Schema<IQuestion>({
 });
 
 export type ClientAnswer = Omit<IQuestion, "correctAnswer"> & {
-  currentAnswer: string;
+  userAnswer: string;
 };
 
 export default QuestionSchema;

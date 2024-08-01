@@ -1,10 +1,10 @@
 export type QuestionItem = {
   question: string;
   options: string[];
-  currentAnswer?: string;
+  userAnswer?: string;
 };
 
-export type QuestionWithCorrectAnswer = Omit<QuestionItem, "currentAnswer"> & {
+export type QuestionWithCorrectAnswer = Omit<QuestionItem, "userAnswer"> & {
   correctAnswer: string;
 };
 
@@ -15,7 +15,10 @@ export type Questionnaire = {
   level: "Easy" | "Medium" | "Hard";
   tags: string[];
   createdAt?: string;
-  createdBy?: string;
+  createdBy?: {
+    uid: string;
+    username: string;
+  };
 };
 
 export type User = {

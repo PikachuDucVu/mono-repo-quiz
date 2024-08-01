@@ -22,7 +22,7 @@ const InteractiveQuestionnaire = ({
 }) => {
   return (
     <>
-      <div className="flex flex-col w-full h-full gap-5">
+      <div className="flex flex-col w-full h-full gap-5 px-5">
         <div className="text-2xl font-semibold text-center text-gray-800">
           <MultilineTextInput
             value={question.question}

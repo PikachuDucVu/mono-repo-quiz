@@ -74,7 +74,7 @@ const Questionaire = ({
                   key={index}
                   className={`flex gap-3 text-black items-center border-4 
                 ${
-                  questionnaire[currentQuestionIndex].currentAnswer === option
+                  questionnaire[currentQuestionIndex].userAnswer === option
                     ? "bg-gray-600 text-white"
                     : ``
                 }
@@ -82,8 +82,7 @@ const Questionaire = ({
                   onClick={() => {
                     onChange((prev) => {
                       const newQuestionaire = [...prev];
-                      newQuestionaire[currentQuestionIndex].currentAnswer =
-                        option;
+                      newQuestionaire[currentQuestionIndex].userAnswer = option;
                       return newQuestionaire;
                     });
                   }}
@@ -106,7 +105,7 @@ const Questionaire = ({
                 disableDefaultColor
                 disableDefaultPadding
                 className={`
-                ${questionnaire[index].currentAnswer && currentQuestionIndex !== index && "bg-gray-500 text-white"}
+                ${questionnaire[index].userAnswer && currentQuestionIndex !== index && "bg-gray-500 text-white"}
                 ${currentQuestionIndex === index && "bg-blue-500 text-white"} 
                 py-2 px-4 rounded-xl hover:bg-blue-400 transition border-2 border-blue-500 `}
                 onClick={() => setCurrentQuestionIndex(index)}

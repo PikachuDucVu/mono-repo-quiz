@@ -54,7 +54,6 @@ export const QuizAppAPI = {
 
   verifyToken: async (): Promise<{ payload: User; message?: string }> => {
     const token = Cookies.get("token");
-    console.log("token", token);
     const res = await axiosInstance.get("/verifyToken", {
       headers: {
         Authorization: `Bearer ${token}`,

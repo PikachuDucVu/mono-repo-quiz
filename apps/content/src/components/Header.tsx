@@ -19,7 +19,7 @@ const Header = () => {
     });
   }, []);
 
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
 
   return (
     <div className="flex w-full">
@@ -65,6 +65,7 @@ const Header = () => {
                       type: "success",
                       autoClose: 2000,
                     });
+                    navigate("/");
                   }}
                   className="px-5 py-2 border-yellow-600 border font-bold"
                 >

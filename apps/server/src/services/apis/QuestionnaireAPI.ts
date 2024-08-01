@@ -67,7 +67,10 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
       questions: body.questions,
       tags: body.tags,
       level: body.level,
-      createdBy: userObjectID,
+      createdBy: {
+        uid: userObjectID,
+        username: user.username,
+      },
     };
     await Questionnaire.create(questionaire);
 
@@ -125,6 +128,22 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
 
     const body = (await c.req.json()) as ClientAnswer[];
     const questionaire = await Questionnaire.findById(id);
+    const token = getCookie(c, "token");
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET.toString()) as {
+      email: string;
+      username: string;
+    };
+
+    if (!decoded.email) {
+      return c.text("Invalid token", 400);
+    }
+
+    const User = mongoose.model("User", UserSchema);
+    const user = await User.findOne({ email: decoded.email });
+    if (!user) {
+      return c.text("User not found", 404);
+    }
 
     if (!questionaire) {
       return c.text("Not found", 404);
@@ -139,10 +158,26 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
         return c.text("Invalid options", 400);
       }
 
-      if (body[i].currentAnswer === questionaire.questions[i].correctAnswer) {
+      if (body[i].userAnswer === questionaire.questions[i].correctAnswer) {
         score++;
       }
     }
+
+    await User.findByIdAndUpdate(
+      user._id,
+      {
+        $push: {
+          history: {
+            questionaireId: new mongoose.Types.ObjectId(id),
+            questionaireName: questionaire.title,
+            answersData: body,
+            score,
+          },
+        },
+      },
+      { new: true }
+    );
+
     return c.json({ score });
   });
 
@@ -185,7 +220,9 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     if (!existQuestionaire) {
       return c.text("Questionaire not found", 404);
     }
-    if (existQuestionaire.createdBy.toString() !== userObjectID.toString()) {
+    if (
+      existQuestionaire.createdBy.uid.toString() !== userObjectID.toString()
+    ) {
       return c.text("You are not authorized to update this questionaire", 401);
     }
 
