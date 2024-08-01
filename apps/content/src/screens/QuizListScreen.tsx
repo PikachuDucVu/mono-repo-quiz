@@ -97,7 +97,6 @@ const QuizListScreen = () => {
                     {convertIsoTimestampToReadableFormat(exam.createdAt)}
                   </div>
                   <div className="flex gap-3 font-medium items-center">
-                    {/* //TODO: Owner of the quiz can modify the quiz */}
                     {(userInfo?.isAdmin ||
                       userInfo?.username === exam?.createdBy?.username) && (
                       <button
