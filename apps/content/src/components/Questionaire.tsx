@@ -13,7 +13,7 @@ const Questionaire = ({
   onChange: React.Dispatch<React.SetStateAction<QuestionItem[]>>;
   onSubmit: (questionnaire: QuestionItem[]) => void;
 }) => {
-  const [time, setTime] = useState(125);
+  const [time, setTime] = useState(60 * 10);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   useEffect(() => {
