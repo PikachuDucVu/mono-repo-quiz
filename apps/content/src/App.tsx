@@ -1,36 +1,38 @@
 import { Route, Switch } from "wouter";
-import HomeScreen from "./screens/HomeScreen";
-import QuizListScreen from "./screens/QuizListScreen";
-import LoginScreen from "./screens/LoginScreen";
-import ExamScreen from "./screens/ExamScreen";
-import NewQuizScreen from "./screens/NewQuizScreen";
-import { NormalScreen } from "./components/NormalScreen";
-import Header from "./components/Header";
-import RegisterScreen from "./screens/RegisterScreen";
+import NewQuizScreen from "./screens/temp/NewQuizScreen";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./context/authen";
+import { ThemeProvider } from "./components/ThemeProvider";
+import { HomeScreen } from "./screens/HomeScreen";
+import Header from "./components/Header";
+import { DashboardQuestionaireScreen } from "./screens/DashboardQuestionaireScreen";
+import { EditQuestionaire } from "./screens/EditQuestionaire";
+import { ExamScreen } from "./screens/ExamScreen";
+import { LoginScreen } from "./screens/LoginScreen";
+import { RegisterScreen } from "./screens/RegisterScreen";
+
 export type AppRouterParam = {
   id: string;
 };
 
 function App() {
   return (
-    <NormalScreen embedded disableDefaultBackground>
+    <ThemeProvider>
       <ToastContainer />
       <AuthProvider>
         <Header />
         <Switch>
           <Route path="/" component={HomeScreen} />
-          <Route path="/admin" component={QuizListScreen} />
-          <Route path="/admin/quiz/" component={NewQuizScreen} />
-          <Route path="/admin/quiz/:id" component={NewQuizScreen} />
+          <Route path="/quizlist" component={DashboardQuestionaireScreen} />
+          <Route path="/quizlist/quiz/new" component={EditQuestionaire} />
+          <Route path="/quizlist/quiz/:id" component={NewQuizScreen} />
           <Route path="/login" component={LoginScreen} />
           <Route path="/register" component={RegisterScreen} />
-          <Route path="/play/:id" component={ExamScreen} />
+          <Route path="/playquiz/:id" component={ExamScreen} />
         </Switch>
       </AuthProvider>
-    </NormalScreen>
+    </ThemeProvider>
   );
 }
 

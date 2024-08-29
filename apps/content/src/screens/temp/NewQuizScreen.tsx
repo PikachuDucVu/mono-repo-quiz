@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { CommonButton } from "../components/common/CommonButton";
+import { CommonButton } from "../../components/common/CommonButton";
 import { useLocation, useParams } from "wouter";
-import { AppRouterParam } from "../App";
-import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
-import { Questionnaire } from "../utils/types";
+import { AppRouterParam } from "../../App";
+import { QuizAppAPI } from "../../utils/apis/QuizAppAPI";
+import { Questionnaire } from "../../utils/types";
 import { IoMdRemoveCircle } from "react-icons/io";
-import InteractiveQuestionnaire from "../components/RenderQuestion";
-import { MultilineTextInput } from "../components/common/MultilineTextInput";
+import InteractiveQuestionnaire from "../../components/RenderQuestion";
+import { MultilineTextInput } from "../../components/common/MultilineTextInput";
 import { toast } from "react-toastify";
 
 const NewQuizScreen = () => {

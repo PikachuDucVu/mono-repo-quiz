@@ -16,6 +16,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleVerifyToken = useCallback(async () => {
     const token = Cookies.get("token");
+    console.log("verify token", token);
     if (token) {
       try {
         const res = await QuizAppAPI.verifyToken();

@@ -1,82 +1,141 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import Lottie from "lottie-react";
-import { useContext, useEffect, useState } from "react";
 import { Link } from "wouter";
-import { useLocation } from "wouter";
-import logoImg from "/logoApp.png";
+import { ThemeModeToggle } from "./ui/ThemeModeToggle";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { AuthContext } from "@/context/authen";
+import Lottie from "lottie-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
-import { AuthContext } from "../context/authen";
 
 const Header = () => {
-  const [WriteBoardAnim, setWriteBoardAnim] = useState();
-
   const { userInfo, isLoggedIn, setLoggedIn } = useContext(AuthContext);
 
+  const [WriteBoardAnim, setWriteBoardAnim] = useState();
+
   useEffect(() => {
-    import("../animations/WriteBoardAnim.json").then((data: any) => {
-      setWriteBoardAnim(data.default);
+    import("../animations/WriteBoardAnim.json").then((data) => {
+      setWriteBoardAnim(data.default as never);
     });
   }, []);
 
-  const [location, navigate] = useLocation();
+  const handleLogout = useCallback(() => {
+    Cookies.remove("token");
+    setLoggedIn(false);
+    toast("Logout successful!", {
+      type: "success",
+      autoClose: 2000,
+    });
+  }, [setLoggedIn]);
 
   return (
-    <div className="flex w-full">
-      <div className="flex flex-1 justify-center items-center border-b">
-        <div className="flex w-full px-5 py-5 items-center justify-between ">
-          <Link to="/" className="flex items-center">
-            <Lottie
-              animationData={WriteBoardAnim}
-              className="relative w-16 left-3"
-            />
-            <img src={logoImg} />
-          </Link>
+    <header className="sticky px-4 lg:px-6 h-14 flex items-center justify-between border-b ">
+      <Link href="/" className="flex items-center justify-center">
+        <Lottie
+          animationData={WriteBoardAnim}
+          className="relative w-12 left-3"
+        />
+      </Link>
+      <nav className="flex items-center gap-4 sm:gap-6">
+        <Link
+          href="#"
+          className="text-sm font-medium hover:underline underline-offset-4 hidden sm:block"
+        >
+          Categories
+        </Link>
+        <Link
+          href="#"
+          className="text-sm font-medium hover:underline underline-offset-4 hidden sm:block"
+        >
+          Leaderboard
+        </Link>
+        <Link
+          href="#"
+          className="text-sm font-medium hover:underline underline-offset-4 hidden sm:block"
+        >
+          About
+        </Link>
 
-          {location !== "/login" && location !== "/register" && !isLoggedIn && (
-            <div className="hidden lg:flex gap-5 items-center">
+        <div className="flex gap-2">
+          {!isLoggedIn ? (
+            <>
               <Link
-                className="px-5 py-2 border-yellow-600 border font-bold"
-                to="/login"
+                href="/login"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
               >
-                Login / Register
+                Login
               </Link>
-            </div>
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+              >
+                Register
+              </Link>
+            </>
+          ) : (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/placeholder-user.jpg" />
+                      <AvatarFallback>JD</AvatarFallback>
+                    </Avatar>
+                    <span className="sr-only">Toggle user menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <div className="flex items-center gap-2 p-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/placeholder-user.jpg" />
+                      <AvatarFallback>JD</AvatarFallback>
+                    </Avatar>
+                    <div className="grid gap-0.5 leading-none">
+                      <div className="font-semibold">John Doe</div>
+                      <div className="text-sm text-muted-foreground">
+                        john@example.com
+                      </div>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Link href="#" className="flex items-center gap-2">
+                      <div className="h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="#" className="flex items-center gap-2">
+                      <div className="h-4 w-4" />
+                      <span>Settings</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <div
+                      className="flex items-center gap-2"
+                      onClick={handleLogout}
+                    >
+                      <div className="h-4 w-4" />
+                      <span>Sign out</span>
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           )}
 
-          {location !== "/login" && location !== "/register" && isLoggedIn && (
-            <div className="hidden md:flex gap-5 items-center">
-              <div className="flex items-center gap-2">
-                <img
-                  src="https://www.pngkey.com/png/full/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png"
-                  className="w-10 h-10 rounded-full"
-                />
-                <div className="flex flex-col items-start">
-                  <div className="font-bold">{userInfo?.username}</div>
-                  <div className="text-xs text-gray-500">{userInfo?.email}</div>
-                </div>
-              </div>
-              <div>
-                <button
-                  onClick={() => {
-                    Cookies.remove("token");
-                    setLoggedIn(false);
-                    toast("Logout successful!", {
-                      type: "success",
-                      autoClose: 2000,
-                    });
-                    navigate("/");
-                  }}
-                  className="px-5 py-2 border-yellow-600 border font-bold"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          )}
+          <ThemeModeToggle />
         </div>
-      </div>
-    </div>
+      </nav>
+    </header>
   );
 };
 

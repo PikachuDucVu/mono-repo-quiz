@@ -1,14 +1,19 @@
-import { FaUserCircle } from "react-icons/fa";
-import { RiLockPasswordFill } from "react-icons/ri"; // Add this line
-import { CommonButton } from "../components/common/CommonButton";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
-import { MdEmail } from "react-icons/md";
-import { GiConfirmed } from "react-icons/gi";
-import { Link, useLocation } from "wouter";
+import { QuizAppAPI } from "@/utils/apis/QuizAppAPI";
 import { toast } from "react-toastify";
 
-const RegisterScreen = () => {
+export function RegisterScreen() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -64,63 +69,61 @@ const RegisterScreen = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-full w-full">
-      <div className="bg-white w-2/5 flex flex-col justify-center items-center h-[75%] relative -top-10 rounded-xl">
-        <div className="text-2xl font-bold p-5 -mt-10">Register</div>
-        <div className="flex flex-col gap-5 w-3/5">
-          <div className="flex w-full border-b-2 border-black gap-2 items-center p-1">
-            <FaUserCircle />
-            <input
-              type="text"
-              placeholder="Username"
-              className="flex-1"
-              onChange={(e) => setUsername(e.target.value)}
-            />
+    <div className="flex justify-center items-center h-screen bg-background">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Register</CardTitle>
+          <CardDescription>Create your account</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                placeholder="Enter your name"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
           </div>
-
-          <div className="flex w-full border-b-2 border-black gap-2 items-center p-1">
-            <MdEmail />
-            <input
-              type="text"
-              placeholder="Email"
-              className="flex-1 "
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="flex w-full border-b-2 border-black gap-2 items-center p-1">
-            <RiLockPasswordFill />
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
               type="password"
-              placeholder="Password"
-              className="w-full"
+              placeholder="Enter your password"
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div className="flex w-full border-b-2 border-black gap-2 items-center p-1">
-            <GiConfirmed />
-            <input
+          <div className="space-y-2">
+            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Input
+              id="confirm-password"
               type="password"
-              placeholder="Re-enter Password"
-              className="w-full"
+              placeholder="Confirm your password"
+              value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
-
-          <div className="text-xs text-gray-500 text-right w-full cursor-pointer">
-            Forgot password?
-          </div>
-          <CommonButton text="Register" onClick={handleAuth} />
-        </div>
-
-        <Link
-          to="/login"
-          className="text-xs text-gray-500 text-center w-full cursor-pointer absolute bottom-10"
-        >
-          Already have an account? Login
-        </Link>
-      </div>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full" onClick={handleAuth}>
+            Register
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
-};
-
-export default RegisterScreen;
+}

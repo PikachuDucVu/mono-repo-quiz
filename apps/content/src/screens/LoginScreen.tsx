@@ -1,12 +1,12 @@
-import { FaUserCircle } from "react-icons/fa";
-import { RiLockPasswordFill } from "react-icons/ri"; // Add this line
-import { CommonButton } from "../components/common/CommonButton";
-import { useState } from "react";
-import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { useState } from "react";
+import { QuizAppAPI } from "@/utils/apis/QuizAppAPI";
 import { toast } from "react-toastify";
 
-const LoginScreen = () => {
+export function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,7 +30,7 @@ const LoginScreen = () => {
 
     try {
       const { token } = await QuizAppAPI.loginWithEmailandPassword(
-        email,
+        email.toLowerCase(),
         password
       );
       if (token) {
@@ -52,57 +52,53 @@ const LoginScreen = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-full w-full">
-      <div className="bg-white w-2/5 flex flex-col justify-center items-center h-[75%] relative -top-10 rounded-xl">
-        <div className="text-2xl font-bold p-5 -mt-10">LOGIN</div>
-        <div className="flex flex-col gap-5 w-3/5">
-          <div className="flex w-full border-b-2 border-black gap-2 items-center p-1">
-            <FaUserCircle />
-            <input
-              type="text"
-              placeholder="Email"
-              className="flex-1 "
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="flex w-full border-b-2 border-black gap-2 items-center p-1">
-            <RiLockPasswordFill />
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <div className="text-xs text-gray-500 text-right w-full cursor-pointer">
-            Forgot password?
-          </div>
-          <CommonButton text="Login" onClick={handleAuth} />
-          <div className="flex w-full gap-3">
-            <CommonButton
-              text="Login with Google"
-              secondaryStyle
-              className="w-[50%] text-sm py-3"
-              disableDefaultPadding
-            />
-            <CommonButton
-              text="Login with Facebook"
-              secondaryStyle
-              disableDefaultPadding
-              className="w-[50%] text-sm py-3"
-            />
-          </div>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary to-secondary">
+      <div className="mx-auto w-full max-w-md space-y-6 rounded-lg bg-card p-6 shadow-lg relative -top-10">
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl font-bold text-foreground">Welcome back</h1>
         </div>
-        <Link
-          to="/register"
-          className="text-xs text-gray-500 text-center w-full cursor-pointer absolute bottom-10"
+        <div className="space-y-1">
+          <Label htmlFor="username" className="text-foreground">
+            Username
+          </Label>
+          <Input
+            id="username"
+            placeholder="Enter your username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="border-2 border-primary focus:border-primary-foreground"
+          />
+        </div>
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password" className="text-foreground">
+              Password
+            </Label>
+            <Link
+              href="#"
+              className="text-sm font-medium underline underline-offset-4 hover:text-primary-foreground"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <Input
+            id="password"
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="border-2 border-primary focus:border-primary-foreground"
+          />
+        </div>
+        <Button
+          onClick={handleAuth}
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
-          Don't have an account? Register
-        </Link>
+          Sign in
+        </Button>
       </div>
     </div>
   );
-};
-
-export default LoginScreen;
+}

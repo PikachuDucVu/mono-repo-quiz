@@ -18,6 +18,7 @@ export type Questionnaire = {
   createdBy?: {
     uid: string;
     username: string;
+    _id: string;
   };
 };
 

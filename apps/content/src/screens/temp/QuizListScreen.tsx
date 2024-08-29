@@ -4,14 +4,12 @@ import { GiLevelEndFlag } from "react-icons/gi";
 import { AiOutlineTags } from "react-icons/ai";
 import { useLocation } from "wouter";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
-import { CommonButton } from "../components/common/CommonButton";
+import { CommonButton } from "../../components/common/CommonButton";
 import { useContext, useEffect, useState } from "react";
-import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
-import { Questionnaire, User } from "../utils/types";
+import { QuizAppAPI } from "../../utils/apis/QuizAppAPI";
+import { Questionnaire, User } from "../../utils/types";
 import { FiEdit } from "react-icons/fi";
-import { AuthContext } from "../context/authen";
-import { convertIsoTimestampToReadableFormat } from "../utils/apis/func";
-import { toast } from "react-toastify";
+import { AuthContext } from "../../context/authen";
 
 const QuizListScreen = () => {
   const [, navigate] = useLocation();
@@ -93,12 +91,11 @@ const QuizListScreen = () => {
                 </div>
                 <div className="flex w-full font-thin text-sm items-center justify-between ">
                   <div>
-                    Author: {exam?.createdBy?.username} · Created:{" "}
-                    {convertIsoTimestampToReadableFormat(exam.createdAt)}
+                    Author: {exam.createdBy.username} · {exam.createdAt}
                   </div>
                   <div className="flex gap-3 font-medium items-center">
-                    {(userInfo?.isAdmin ||
-                      userInfo?.username === exam?.createdBy?.username) && (
+                    {/* //TODO: Owner of the quiz can modify the quiz */}
+                    {userInfo?.isAdmin && (
                       <button
                         onClick={() => {
                           navigateToModifyQuiz(exam._id);
@@ -115,13 +112,6 @@ const QuizListScreen = () => {
                     </button>
                     <div
                       onClick={() => {
-                        if (!isLoggedIn) {
-                          toast("Please login to play the quiz", {
-                            type: "error",
-                            autoClose: 2000,
-                          });
-                          return;
-                        }
                         navigateToPlayQuiz(exam._id);
                       }}
                     >
