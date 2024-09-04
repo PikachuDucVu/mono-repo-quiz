@@ -5,8 +5,8 @@ import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
 import Cookies from "js-cookie";
 const AuthContext = createContext({
   isLoggedIn: false,
-  userInfo: null,
-  setLoggedIn: (isLoggedIn: boolean) => {},
+  userInfo: undefined as User,
+  setLoggedIn: (_isLoggedIn: boolean) => {},
   callVerifyToken: () => {},
 });
 
@@ -16,7 +16,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleVerifyToken = useCallback(async () => {
     const token = Cookies.get("token");
-    console.log("verify token", token);
     if (token) {
       try {
         const res = await QuizAppAPI.verifyToken();
@@ -28,7 +27,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           Cookies.remove("token");
           toast(res.message, {
             type: "error",
-            autoClose: 2000,
+            autoClose: 1000,
             onClose: () => {
               setLoggedIn(false);
             },

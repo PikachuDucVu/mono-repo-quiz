@@ -23,7 +23,7 @@ export function RegisterScreen() {
     if (!email || !password || !username || !confirmPassword) {
       toast("Please fill in all fields", {
         type: "error",
-        autoClose: 2000,
+        autoClose: 1000,
       });
       return;
     }
@@ -31,7 +31,7 @@ export function RegisterScreen() {
     if (password !== confirmPassword) {
       toast("Passwords do not match", {
         type: "error",
-        autoClose: 2000,
+        autoClose: 1000,
       });
       return;
     }
@@ -40,7 +40,7 @@ export function RegisterScreen() {
     if (!regexEmail.test(email)) {
       toast("Invalid email", {
         type: "error",
-        autoClose: 2000,
+        autoClose: 1000,
       });
       return;
     }
@@ -54,7 +54,7 @@ export function RegisterScreen() {
       if (token) {
         toast("Registration successful! Redirecting...", {
           type: "success",
-          autoClose: 2000,
+          autoClose: 1000,
           onClose: () => {
             window.location.href = "/admin";
           },
@@ -63,7 +63,7 @@ export function RegisterScreen() {
     } catch (error) {
       toast(`${error.response.data.message || "Failed to register"}`, {
         type: "error",
-        autoClose: 2000,
+        autoClose: 1000,
       });
     }
   };

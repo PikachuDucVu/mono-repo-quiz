@@ -14,7 +14,7 @@ const LoginScreen = () => {
     if (!email || !password) {
       toast("Please fill all the fields", {
         type: "error",
-        autoClose: 2000,
+        autoClose: 1000,
       });
       return;
     }
@@ -23,7 +23,7 @@ const LoginScreen = () => {
     if (!regexEmail.test(email)) {
       toast("Please enter a valid email", {
         type: "error",
-        autoClose: 2000,
+        autoClose: 1000,
       });
       return;
     }
@@ -36,7 +36,7 @@ const LoginScreen = () => {
       if (token) {
         toast("Login successful! Redirecting...", {
           type: "success",
-          autoClose: 2000,
+          autoClose: 1000,
           onClose: () => {
             // Redirect to admin page
             window.location.href = "/admin";
@@ -46,7 +46,7 @@ const LoginScreen = () => {
     } catch (error) {
       toast(`${error.response.data.message || "Failed to login"}`, {
         type: "error",
-        autoClose: 2000,
+        autoClose: 1000,
       });
     }
   };

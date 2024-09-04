@@ -31,9 +31,14 @@ const Header = () => {
     setLoggedIn(false);
     toast("Logout successful!", {
       type: "success",
-      autoClose: 2000,
+      autoClose: 1000,
+      onClose: () => {
+        window.location.href = "/";
+      },
     });
   }, [setLoggedIn]);
+
+  console.log(userInfo);
 
   return (
     <header className="sticky px-4 lg:px-6 h-14 flex items-center justify-between border-b ">
@@ -86,7 +91,12 @@ const Header = () => {
                   <Button variant="ghost" size="icon" className="rounded-full">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src="/placeholder-user.jpg" />
-                      <AvatarFallback>JD</AvatarFallback>
+                      <AvatarFallback>
+                        {userInfo?.username
+                          ?.split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
                     </Avatar>
                     <span className="sr-only">Toggle user menu</span>
                   </Button>
@@ -95,12 +105,17 @@ const Header = () => {
                   <div className="flex items-center gap-2 p-2">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src="/placeholder-user.jpg" />
-                      <AvatarFallback>JD</AvatarFallback>
+                      <AvatarFallback>
+                        {userInfo?.username
+                          ?.split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="grid gap-0.5 leading-none">
-                      <div className="font-semibold">John Doe</div>
-                      <div className="text-sm text-muted-foreground">
-                        john@example.com
+                      <div className="font-semibold">{userInfo?.username}</div>
+                      <div className="text-sm text-muted-foreground ">
+                        {userInfo?.email}
                       </div>
                     </div>
                   </div>
@@ -118,11 +133,8 @@ const Header = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <div
-                      className="flex items-center gap-2"
-                      onClick={handleLogout}
-                    >
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <div className="flex items-center gap-2">
                       <div className="h-4 w-4" />
                       <span>Sign out</span>
                     </div>
