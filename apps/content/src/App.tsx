@@ -1,5 +1,4 @@
 import { Route, Switch } from "wouter";
-import NewQuizScreen from "./screens/temp/NewQuizScreen";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./context/authen";
