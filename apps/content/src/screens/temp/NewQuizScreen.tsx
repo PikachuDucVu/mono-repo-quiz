@@ -18,7 +18,7 @@ const NewQuizScreen = () => {
   >(undefined);
 
   const params = useParams<AppRouterParam>();
-  const [, nagivate] = useLocation();
+  const [, navigate] = useLocation();
 
   const fetchQuestions = useCallback(async () => {
     if (!params.id) {
@@ -134,19 +134,19 @@ const NewQuizScreen = () => {
     if (!params.id) {
       const res = await QuizAppAPI.addQuestionnaire(questionnaire);
       toast.success(res);
-      nagivate("/admin");
+      navigate("/admin");
       return;
     }
     const res = await QuizAppAPI.updateQuestionnaire(params.id, questionnaire);
     toast.success(res);
-    nagivate("/admin");
+    navigate("/admin");
   };
 
   const onDeleteQuestionaire = async () => {
     if (!confirm("Are you sure you want to delete this questionnaire?")) return;
     const res = await QuizAppAPI.deleteQuestionnaire(params.id);
     toast.success(res);
-    nagivate("/admin");
+    navigate("/admin");
   };
   return (
     <div className="flex w-full h-full font-medium text-gray-800">

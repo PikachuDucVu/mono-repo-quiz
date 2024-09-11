@@ -4,14 +4,14 @@ export type QuestionItem = {
   userAnswer?: string;
 };
 
-export type QuestionWithCorrectAnswer = Omit<QuestionItem, "userAnswer"> & {
+export type Questions = Omit<QuestionItem, "userAnswer"> & {
   correctAnswer: string;
 };
 
 export type Questionnaire = {
   _id?: string;
   title: string;
-  questions: QuestionWithCorrectAnswer[];
+  questions: Questions[];
   level: "Easy" | "Medium" | "Hard";
   tags: string[];
   createdAt?: string;

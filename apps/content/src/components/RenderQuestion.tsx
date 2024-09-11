@@ -1,4 +1,4 @@
-import { QuestionWithCorrectAnswer } from "../utils/types";
+import { Questions } from "../utils/types";
 import { CommonButton } from "./common/CommonButton";
 import { MultilineTextInput } from "./common/MultilineTextInput";
 import { FaHeart } from "react-icons/fa";
@@ -12,7 +12,7 @@ const InteractiveQuestionnaire = ({
   updateOption,
   updateCorrectAnswer,
 }: {
-  question: QuestionWithCorrectAnswer;
+  question: Questions;
   index: number;
   updateQuestion: (value: string) => void;
   addOption: () => void;

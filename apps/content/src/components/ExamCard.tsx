@@ -111,7 +111,6 @@ const ExamCard = ({ questionnaire, onSubmit, onChange }: ExamCardProps) => {
       </div>
 
       <div className="flex justify-center mt-5 gap-3">
-        {/* Todo: Phan trang */}
         {questionnaire.map((_, index) => (
           <Button
             key={index}

@@ -5,6 +5,7 @@ import { useParams } from "wouter";
 import { QuizAppAPI } from "@/utils/apis/QuizAppAPI";
 import ExamCard from "@/components/ExamCard";
 import { toast } from "react-toastify";
+import { Button } from "@/components/ui/button";
 
 export function ExamScreen() {
   const [questionnaire, setQuestionnaire] = useState<QuestionItem[]>([]);
@@ -37,11 +38,22 @@ export function ExamScreen() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-green-100 to-blue-100 relative">
-      <ExamCard
-        questionnaire={questionnaire}
-        onSubmit={onSubmit}
-        onChange={setQuestionnaire}
-      />
+      {!submitted ? (
+        <ExamCard
+          questionnaire={questionnaire}
+          onSubmit={onSubmit}
+          onChange={setQuestionnaire}
+        />
+      ) : (
+        <div className="flex flex-col gap-5">
+          <h1 className="text-3xl font-bold mt-10">
+            Your Score : {totalScore}
+          </h1>
+          <Button variant="outline">
+            <a href="/quizlist">Back to Home</a>
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

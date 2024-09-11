@@ -220,10 +220,16 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     if (!existQuestionaire) {
       return c.text("Questionaire not found", 404);
     }
-    if (
-      existQuestionaire.createdBy.uid.toString() !== userObjectID.toString()
-    ) {
-      return c.text("You are not authorized to update this questionaire", 401);
+
+    if (!user.isAdmin) {
+      if (
+        existQuestionaire.createdBy.uid.toString() !== userObjectID.toString()
+      ) {
+        return c.text(
+          "You are not authorized to update this questionaire",
+          401
+        );
+      }
     }
 
     const body = (await c.req.json()) as IQuestionnaire;

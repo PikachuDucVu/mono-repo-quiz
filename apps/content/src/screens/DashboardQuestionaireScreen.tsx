@@ -7,6 +7,7 @@ import { AuthContext } from "@/context/authen";
 import { Questionnaire, User } from "@/utils/types";
 import { useState, useContext, useEffect } from "react";
 import { QuizAppAPI } from "@/utils/apis/QuizAppAPI";
+import { convertIsoTimestampToReadableFormat } from "@/utils/apis/func";
 
 export function DashboardQuestionaireScreen() {
   const [, navigate] = useLocation();
@@ -17,14 +18,14 @@ export function DashboardQuestionaireScreen() {
   }>(AuthContext);
 
   const navigateToCreateNewQuiz = () => {
-    navigate(`/admin/quiz/`);
+    navigate(`/quiz/new`);
   };
   const navigateToModifyQuiz = (id: string) => {
-    navigate(`/admin/quiz/${id}`);
+    navigate(`/quiz/edit/${id}`);
   };
 
   const navigateToPlayQuiz = (id: string) => {
-    navigate(`/playquiz/${id}`);
+    navigate(`/play/${id}`);
   };
 
   const fetchAllQuestionnaire = async () => {
@@ -79,11 +80,13 @@ export function DashboardQuestionaireScreen() {
                 </div>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Author: {questionnaire.createdBy.username || ""} · Created:{" "}
-                  {questionnaire.createdAt}
+                  {convertIsoTimestampToReadableFormat(questionnaire.createdAt)}
                 </p>
               </div>
               <div className="flex space-x-2">
-                {userInfo?.isAdmin && (
+                {(userInfo?.isAdmin ||
+                  userInfo?.username ===
+                    questionnaire?.createdBy?.username) && (
                   <Button
                     variant="outline"
                     className="bg-yellow-300"
@@ -92,7 +95,7 @@ export function DashboardQuestionaireScreen() {
                     }}
                   >
                     <FilePenIcon className="w-4 h-4 mr-2" />
-                    Edit
+                    Chỉnh sửa
                   </Button>
                 )}
                 <Button
@@ -101,7 +104,7 @@ export function DashboardQuestionaireScreen() {
                   onClick={() => {}}
                 >
                   <ShareIcon className="w-4 h-4 mr-2" />
-                  Share
+                  Chia sẻ
                 </Button>
                 <Button
                   variant="outline"
@@ -111,7 +114,7 @@ export function DashboardQuestionaireScreen() {
                   }}
                 >
                   <PlayIcon className="w-4 h-4 mr-2" />
-                  Play
+                  Chơi
                 </Button>
               </div>
             </div>
