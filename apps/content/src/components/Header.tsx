@@ -41,7 +41,7 @@ const Header = () => {
   console.log(userInfo);
 
   return (
-    <header className="sticky px-4 lg:px-6 h-14 flex items-center justify-between border-b ">
+    <header className="sticky top-0 left-0 right-0 z-50 px-4 lg:px-6 h-14 flex items-center justify-between border-b bg-muted ">
       <Link href="/" className="flex items-center justify-center">
         <Lottie
           animationData={WriteBoardAnim}
