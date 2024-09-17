@@ -43,7 +43,7 @@ const ExamCard = ({ questionnaire, onSubmit, onChange }: ExamCardProps) => {
   };
 
   return (
-    <Card className="w-full max-w-5xl p-8 relative -top-10">
+    <Card className="w-full max-w-5xl p-8 relative -top-8">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center space-x-2">
           {theme === "dark" ? (

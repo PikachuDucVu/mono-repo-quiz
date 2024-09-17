@@ -1,11 +1,6 @@
-- [ ] Add media for each question,
-- [ ] Fix Button Number Question at Exam
-- [ ] Implement the scoring system
-- [ ] Add a progress bar
-- [ ] Style the quiz interface
-- [ ] Write unit tests for the quiz functionality
-- [devmode] Deploy the quiz application
-- [ ] Check answers and provide feedback
-- [ ] Conduct user testing and gather feedback
-- [ ] Make any necessary improvements based on user feedback
-- [ ] Celebrate the successful completion of the quiz project!
+- [ ] User info screen (name, email, image, history)
+- [ ] Return time completed exam in the submit exam screen
+
+- [ ] Create Admin Dashboard (CRUD users, exams, questions, categories)
+- [ ] Questionnaire properties (Permission Control, Who can join the questionnaire, time to start, time to end, limit joined time)
+- [ ] User properties (image, history, change infomation (name, password))

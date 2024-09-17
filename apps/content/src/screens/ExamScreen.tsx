@@ -6,6 +6,7 @@ import { QuizAppAPI } from "@/utils/apis/QuizAppAPI";
 import ExamCard from "@/components/ExamCard";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
+import ShowScore from "@/components/ShowScore";
 
 export function ExamScreen() {
   const [questionnaire, setQuestionnaire] = useState<QuestionItem[]>([]);
@@ -37,7 +38,7 @@ export function ExamScreen() {
   }, [fetchQuestionaire]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-green-100 to-blue-100 relative">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-green-100 to-blue-100 relative w-full ">
       {!submitted ? (
         <ExamCard
           questionnaire={questionnaire}
@@ -45,14 +46,7 @@ export function ExamScreen() {
           onChange={setQuestionnaire}
         />
       ) : (
-        <div className="flex flex-col gap-5">
-          <h1 className="text-3xl font-bold mt-10">
-            Your Score : {totalScore}
-          </h1>
-          <Button variant="outline">
-            <a href="/quizlist">Back to Home</a>
-          </Button>
-        </div>
+        <ShowScore score={totalScore} totalQuestions={questionnaire.length} />
       )}
     </div>
   );
