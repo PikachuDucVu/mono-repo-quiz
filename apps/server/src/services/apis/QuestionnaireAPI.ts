@@ -67,6 +67,8 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
       questions: body.questions,
       tags: body.tags,
       level: body.level,
+      historyParticipants: [],
+      status: "active",
       createdBy: {
         uid: userObjectID,
         username: user.username,
@@ -79,8 +81,26 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
 
   app.get("/getQuestionaire", async (c) => {
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
-    const questionaires = await Questionnaire.find();
-    return c.json(questionaires);
+
+    const questionaires = await Questionnaire.find({
+      status: "active",
+    });
+
+    const filterProps = questionaires.map((questionaire) => {
+      return {
+        _id: questionaire._id,
+        title: questionaire.title,
+        totalQuestions: questionaire.questions.length,
+        level: questionaire.level,
+        tags: questionaire.tags,
+        historyParticipants: questionaire.historyParticipants,
+        status: questionaire.status,
+        createdAt: questionaire.createdAt,
+        createdBy: questionaire.createdBy,
+      };
+    });
+
+    return c.json(filterProps);
   });
 
   app.get("user/getQuestionaireToEdit/:id", async (c) => {
@@ -110,6 +130,11 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
     if (!questionaire) {
       return c.text("Not found", 404);
     }
+
+    if (questionaire.status === "inactive") {
+      return c.text("Questionaire is inactive", 400);
+    }
+
     const filteredQuestionaire = questionaire.questions.map((question) => {
       return {
         question: question.question,
@@ -163,6 +188,8 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
       }
     }
 
+    console.log(body);
+
     await User.findByIdAndUpdate(
       user._id,
       {
@@ -172,6 +199,22 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
             questionaireName: questionaire.title,
             answersData: body,
             score,
+          },
+        },
+      },
+      { new: true }
+    );
+
+    await Questionnaire.findByIdAndUpdate(
+      id,
+      {
+        $push: {
+          historyParticipants: {
+            uid: user._id,
+            username: user.username,
+            email: user.email,
+            score,
+            answersData: body,
           },
         },
       },
@@ -221,7 +264,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
       return c.text("Questionaire not found", 404);
     }
 
-    if (!user.isAdmin) {
+    if (user.role !== "admin" && user.role !== "moderator") {
       if (
         existQuestionaire.createdBy.uid.toString() !== userObjectID.toString()
       ) {
@@ -258,6 +301,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
       questions: body.questions,
       tags: body.tags.length ? body.tags : [],
       level: body.level,
+      status: body.status,
     });
 
     return c.text("Update questionaire successfully!", 200);

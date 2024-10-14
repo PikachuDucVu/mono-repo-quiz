@@ -1,3 +1,4 @@
+import { UploadImage } from "./services/apis/ImageS3API";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import QuestionnaireAPI from "./services/apis/QuestionnaireAPI";
@@ -30,6 +31,7 @@ app.notFound((c) => {
 
 QuestionnaireAPI(app, currentServerTime);
 AuthenticationAPI(app, currentServerTime);
+UploadImage(app);
 
 export { app, currentServerTime };
 export default app;

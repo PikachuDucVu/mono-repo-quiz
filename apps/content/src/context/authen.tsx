@@ -1,8 +1,15 @@
-import { createContext, useCallback, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { User } from "../utils/types";
 import { toast } from "react-toastify";
 import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
 import Cookies from "js-cookie";
+import { LoadingContext } from "./loading";
 const AuthContext = createContext({
   isLoggedIn: false,
   userInfo: undefined as User,
@@ -11,10 +18,12 @@ const AuthContext = createContext({
 });
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const { setLoading } = useContext(LoadingContext);
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState<User>();
 
   const handleVerifyToken = useCallback(async () => {
+    setLoading(true);
     const token = Cookies.get("token");
     if (token) {
       try {
@@ -38,7 +47,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.error(error);
       }
     }
-  }, []);
+
+    setLoading(false);
+  }, [setLoading]);
 
   useEffect(() => {
     handleVerifyToken();

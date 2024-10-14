@@ -11,9 +11,16 @@ export type Questions = Omit<QuestionItem, "userAnswer"> & {
 export type Questionnaire = {
   _id?: string;
   title: string;
-  questions: Questions[];
+  totalQuestions: number;
   level: "Easy" | "Medium" | "Hard";
   tags: string[];
+  historyParticipants?: {
+    uid: string;
+    username: string;
+    email: string;
+    score: number;
+  }[];
+  status: "active" | "inactive";
   createdAt?: string;
   createdBy?: {
     uid: string;
@@ -22,8 +29,25 @@ export type Questionnaire = {
   };
 };
 
+type HistoricalQuiz = {
+  questionaireId: string;
+  questionaireName: string;
+  answersData: QuestionItem[];
+  score: number;
+};
+
+type UserData = {
+  imgUrl: string;
+  history: HistoricalQuiz[];
+};
+
 export type User = {
   username: string;
   email: string;
-  isAdmin?: boolean;
+  password: string;
+  role: "user" | "moderator" | "admin";
+  status: "active" | "banned";
+  userData: UserData;
+  createdAt: Date;
+  updatedAt: Date;
 };

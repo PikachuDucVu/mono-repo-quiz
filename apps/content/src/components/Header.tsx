@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { ThemeModeToggle } from "./ui/ThemeModeToggle";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/authen";
@@ -19,6 +19,7 @@ const Header = () => {
   const { userInfo, isLoggedIn, setLoggedIn } = useContext(AuthContext);
 
   const [WriteBoardAnim, setWriteBoardAnim] = useState();
+  const [, navigate] = useLocation();
 
   useEffect(() => {
     import("../animations/WriteBoardAnim.json").then((data) => {
@@ -37,8 +38,6 @@ const Header = () => {
       },
     });
   }, [setLoggedIn]);
-
-  console.log(userInfo);
 
   return (
     <header className="sticky top-0 left-0 right-0 z-50 px-4 lg:px-6 h-14 flex items-center justify-between border-b bg-muted ">
@@ -89,8 +88,8 @@ const Header = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src="/placeholder-user.jpg" />
+                    <Avatar className="h-8 w-8 border">
+                      <AvatarImage src={userInfo?.userData?.imgUrl} />
                       <AvatarFallback>
                         {userInfo?.username
                           ?.split(" ")
@@ -120,17 +119,16 @@ const Header = () => {
                     </div>
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <Link href="#" className="flex items-center gap-2">
-                      <div className="h-4 w-4" />
-                      <span>Profile</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href="#" className="flex items-center gap-2">
+
+                  <DropdownMenuItem
+                    onClick={() => {
+                      navigate("/profiles");
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
                       <div className="h-4 w-4" />
                       <span>Settings</span>
-                    </Link>
+                    </div>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>

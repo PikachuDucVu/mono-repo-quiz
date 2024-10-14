@@ -5,18 +5,20 @@ import { PuzzleIcon } from "lucide-react";
 import { useLocation } from "wouter";
 import { AuthContext } from "@/context/authen";
 import { Questionnaire, User } from "@/utils/types";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import { QuizAppAPI } from "@/utils/apis/QuizAppAPI";
 import { convertIsoTimestampToReadableFormat } from "@/utils/apis/func";
+import { LoadingContext } from "@/context/loading";
 
 export function DashboardQuestionaireScreen() {
   const [, navigate] = useLocation();
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
-  const { userInfo, isLoggedIn } = useContext<{
+  const { userInfo } = useContext<{
     userInfo: User;
     isLoggedIn: boolean;
   }>(AuthContext);
 
+  const { setLoading } = useContext(LoadingContext);
   const navigateToCreateNewQuiz = () => {
     navigate(`/quiz/new`);
   };
@@ -28,14 +30,18 @@ export function DashboardQuestionaireScreen() {
     navigate(`/play/${id}`);
   };
 
-  const fetchAllQuestionnaire = async () => {
+  const fetchAllQuestionnaire = useCallback(async () => {
+    setLoading(true);
+
     const data = await QuizAppAPI.getAllQuestionnaires();
     setQuestionnaires(data);
-  };
+
+    setLoading(false);
+  }, [setLoading]);
 
   useEffect(() => {
     fetchAllQuestionnaire();
-  }, []);
+  }, [fetchAllQuestionnaire]);
   return (
     <div className="flex w-full min-h-screen bg-inherit">
       <aside className="w-1/4 p-4 border-r">
@@ -72,7 +78,7 @@ export function DashboardQuestionaireScreen() {
                 </div>
                 <div className="flex items-center mt-2 text-sm text-muted-foreground">
                   <ListIcon className="w-4 h-4 mr-1" />
-                  {questionnaire.questions.length} câu hỏi
+                  {questionnaire.totalQuestions} câu hỏi
                   <BarChartIcon className="w-4 h-4 mx-2" />
                   {questionnaire.level}
                   <UsersIcon className="w-4 h-4 mx-2" />
@@ -84,7 +90,7 @@ export function DashboardQuestionaireScreen() {
                 </p>
               </div>
               <div className="flex space-x-2">
-                {(userInfo?.isAdmin ||
+                {(userInfo.role !== "user" ||
                   userInfo?.username ===
                     questionnaire?.createdBy?.username) && (
                   <Button

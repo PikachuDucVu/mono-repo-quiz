@@ -86,7 +86,7 @@ export function HomeScreen() {
                 </ul>
               </div>
               <img
-                src="/placeholder.svg"
+                src="/banner.png"
                 width="550"
                 height="310"
                 alt="Features"
