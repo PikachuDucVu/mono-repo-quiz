@@ -90,7 +90,7 @@ export function DashboardQuestionaireScreen() {
                 </p>
               </div>
               <div className="flex space-x-2">
-                {(userInfo.role !== "user" ||
+                {(userInfo?.role !== "user" ||
                   userInfo?.username ===
                     questionnaire?.createdBy?.username) && (
                   <Button
