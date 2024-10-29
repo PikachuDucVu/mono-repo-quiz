@@ -28,7 +28,7 @@ const Header = () => {
   }, []);
 
   const handleLogout = useCallback(() => {
-    Cookies.remove("token");
+    Cookies.remove("userToken");
     setLoggedIn(false);
     toast("Logout successful!", {
       type: "success",

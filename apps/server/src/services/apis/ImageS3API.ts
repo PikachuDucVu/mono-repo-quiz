@@ -21,13 +21,13 @@ export const UploadImage = async (app: Hono) => {
     "/user/*",
     bearerAuth({
       verifyToken: async (token, c) => {
-        return token === getCookie(c, "token");
+        return token === getCookie(c, "userToken");
       },
     })
   );
 
   app.post("user/image/upload", async (c) => {
-    const token = getCookie(c, "token");
+    const token = getCookie(c, "userToken");
     const body = await c.req.parseBody();
     const imageFile = body["image"] as File;
     const fileBuffer = Buffer.from(await imageFile.arrayBuffer());

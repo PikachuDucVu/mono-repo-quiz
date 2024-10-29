@@ -5,26 +5,24 @@ import {
   QuestionnaireSchema,
 } from "../../schemas/QuestionnaireSchema";
 import { Hono } from "hono";
-import { connectMongoose } from "../mongoose";
 import { ClientAnswer } from "../../schemas/QuestionSchema";
 import { bearerAuth } from "hono/bearer-auth";
 import { getCookie } from "hono/cookie";
 import UserSchema from "../../schemas/UserSchema";
 
 const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
-  connectMongoose();
   app.use(
     "/user/*",
     bearerAuth({
       verifyToken: async (token, c) => {
-        return token === getCookie(c, "token");
+        return token === getCookie(c, "userToken");
       },
     })
   );
 
   app.post("user/addQuestionaire", async (c) => {
     const body = (await c.req.json()) as IQuestionnaire;
-    const token = getCookie(c, "token");
+    const token = getCookie(c, "userToken");
     const Questionnaire = mongoose.model("Questionnaire", QuestionnaireSchema);
 
     if (!body.title || !body.questions) {
@@ -153,7 +151,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
 
     const body = (await c.req.json()) as ClientAnswer[];
     const questionaire = await Questionnaire.findById(id);
-    const token = getCookie(c, "token");
+    const token = getCookie(c, "userToken");
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET.toString()) as {
       email: string;
@@ -240,7 +238,7 @@ const QuestionnaireAPI = async (app: Hono, currentServerTime: string) => {
   });
 
   app.put("user/updateQuestionaire/:id", async (c) => {
-    const token = getCookie(c, "token");
+    const token = getCookie(c, "userToken");
     const decoded = jwt.verify(token, process.env.JWT_SECRET.toString()) as {
       email: string;
       username: string;

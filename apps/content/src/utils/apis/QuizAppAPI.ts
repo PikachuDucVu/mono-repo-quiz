@@ -3,13 +3,13 @@ import Cookies from "js-cookie";
 import axiosInstance from "./axios";
 
 export const QuizAppAPI = {
-  loginWithEmailandPassword: async (
+  login: async (
     email: string,
     password: string
   ): Promise<{ token: string }> => {
     const res = await axiosInstance.post("/login", { email, password });
     if (res.data.token) {
-      Cookies.set("token", res.data.token, {
+      Cookies.set("userToken", res.data.token, {
         path: "/",
       });
     }
@@ -17,8 +17,8 @@ export const QuizAppAPI = {
   },
 
   verifyToken: async (): Promise<{ payload: User; message?: string }> => {
-    const token = Cookies.get("token");
-    const res = await axiosInstance.get("/verifyToken", {
+    const token = Cookies.get("userToken");
+    const res = await axiosInstance.get("user/verifyToken", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -38,7 +38,7 @@ export const QuizAppAPI = {
     });
 
     if (res.data.token) {
-      Cookies.set("token", res.data.token, {
+      Cookies.set("userToken", res.data.token, {
         path: "/",
       });
     }
@@ -54,7 +54,7 @@ export const QuizAppAPI = {
     token: string;
     error?: string;
   }> => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("userToken");
 
     const res = await axiosInstance.put("updateProfile", payload, {
       headers: {
@@ -63,7 +63,7 @@ export const QuizAppAPI = {
     });
 
     if (res.data.token) {
-      Cookies.set("token", res.data.token, {
+      Cookies.set("userToken", res.data.token, {
         path: "/",
       });
     }
@@ -77,7 +77,7 @@ export const QuizAppAPI = {
   },
 
   getQuestionnaireToEditById: async (id: string): Promise<Questionnaire> => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("userToken");
 
     const res = await axiosInstance.get(`user/getQuestionaireToEdit/${id}`, {
       headers: {

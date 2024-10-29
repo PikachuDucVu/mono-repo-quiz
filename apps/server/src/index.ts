@@ -3,13 +3,15 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import QuestionnaireAPI from "./services/apis/QuestionnaireAPI";
 import { logger } from "hono/logger";
-import AuthenticationAPI from "./services/apis/AuthenticationAPI";
+import AuthenticationAPI from "./services/apis/UserAPI";
+import AdminAPI from "./services/apis/AdminAPI";
+import { connectMongoose } from "./services/mongoose";
 
 const app = new Hono();
 app.use(
   "*",
   cors({
-    origin: ["http://localhost:5173", "https://quiz.ducvu.name.vn"],
+    origin: [process.env.URL_ADMIN_APP, process.env.URL_CLIENT_APP],
     credentials: true,
   })
 );
@@ -29,8 +31,11 @@ app.notFound((c) => {
   return c.text("Khong tim thay, 404 Not found", 404);
 });
 
-QuestionnaireAPI(app, currentServerTime);
+connectMongoose();
+
+AdminAPI(app);
 AuthenticationAPI(app, currentServerTime);
+QuestionnaireAPI(app, currentServerTime);
 UploadImage(app);
 
 export { app, currentServerTime };

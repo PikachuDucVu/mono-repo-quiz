@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Bell,
   ChevronDown,
@@ -49,6 +49,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { AdminAPI } from "@/utils/apis/AdminAPI";
+import { User } from "@/utils/types";
+import { toast } from "react-toastify";
 
 // Mock data for quizzes (unchanged)
 const mockQuizzes = [
@@ -102,55 +105,6 @@ const mockQuizzes = [
   },
 ];
 
-// Updated mock data for users
-const mockUsers = [
-  {
-    id: 1,
-    name: "Alice Johnson",
-    email: "alice@example.com",
-    quizzesTaken: 15,
-    avgScore: 85,
-    role: "User",
-    status: "Active",
-  },
-  {
-    id: 2,
-    name: "Bob Smith",
-    email: "bob@example.com",
-    quizzesTaken: 10,
-    avgScore: 72,
-    role: "User",
-    status: "Active",
-  },
-  {
-    id: 3,
-    name: "Charlie Brown",
-    email: "charlie@example.com",
-    quizzesTaken: 20,
-    avgScore: 90,
-    role: "Admin",
-    status: "Active",
-  },
-  {
-    id: 4,
-    name: "Diana Ross",
-    email: "diana@example.com",
-    quizzesTaken: 8,
-    avgScore: 68,
-    role: "User",
-    status: "Banned",
-  },
-  {
-    id: 5,
-    name: "Ethan Hunt",
-    email: "ethan@example.com",
-    quizzesTaken: 25,
-    avgScore: 95,
-    role: "Moderator",
-    status: "Active",
-  },
-];
-
 // Mock data for results (unchanged)
 const mockResults = [
   {
@@ -196,21 +150,18 @@ export function Dashboard() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [difficultyFilter, setDifficultyFilter] = useState("All");
   const [quizzes, setQuizzes] = useState(mockQuizzes);
-  const [users, setUsers] = useState(mockUsers);
+  const [users, setUsers] = useState<User[]>([]);
   const [isNewQuizDialogOpen, setIsNewQuizDialogOpen] = useState(false);
   const [isEditQuizDialogOpen, setIsEditQuizDialogOpen] = useState(false);
   const [isStatsDialogOpen, setIsStatsDialogOpen] = useState(false);
   const [isNewUserDialogOpen, setIsNewUserDialogOpen] = useState(false);
   const [isEditUserDialogOpen, setIsEditUserDialogOpen] = useState(false);
   const [currentQuiz, setCurrentQuiz] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
   const [newQuizTitle, setNewQuizTitle] = useState("");
   const [newQuizCategory, setNewQuizCategory] = useState("");
   const [newQuizDifficulty, setNewQuizDifficulty] = useState("");
   const [newQuizQuestions, setNewQuizQuestions] = useState("");
-  const [newUserName, setNewUserName] = useState("");
-  const [newUserEmail, setNewUserEmail] = useState("");
-  const [newUserRole, setNewUserRole] = useState("User");
+  const [onEditUser, setOnEditUser] = useState<User | undefined>(undefined);
 
   const filteredQuizzes = quizzes.filter(
     (quiz) =>
@@ -276,59 +227,101 @@ export function Dashboard() {
     setIsStatsDialogOpen(true);
   };
 
+  const resetUserForm = () => {
+    setOnEditUser(undefined);
+  };
+
+  const openEditUserDialog = (user: User) => {
+    setOnEditUser(user);
+    setIsEditUserDialogOpen(true);
+  };
+
+  /////////////////////////////////////////////////
+  const fetchUsersList = useCallback(async () => {
+    try {
+      const res = await AdminAPI.getUsers();
+      setUsers(res.users);
+
+      console.log(res.users);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUsersList();
+  }, [fetchUsersList]);
+
+  const addNewUser = useCallback(async () => {
+    if (!onEditUser) return;
+
+    const newUser = onEditUser;
+
+    try {
+      const req = await AdminAPI.addNewUser(newUser);
+
+      if (req.message) {
+        toast.success(req.message || "User added successfully");
+        fetchUsersList();
+        setIsNewUserDialogOpen(false);
+        resetUserForm();
+      }
+    } catch (e) {
+      toast.error(e.response.data.message || "Failed to add user");
+    }
+  }, [fetchUsersList, onEditUser]);
+
   const handleCreateUser = () => {
-    const newUser = {
-      id: users.length + 1,
-      name: newUserName,
-      email: newUserEmail,
-      quizzesTaken: 0,
-      avgScore: 0,
-      role: newUserRole,
-      status: "Active",
-    };
-    setUsers([...users, newUser]);
+    addNewUser();
     setIsNewUserDialogOpen(false);
     resetUserForm();
   };
 
-  const handleEditUser = () => {
-    const updatedUsers = users.map((user) =>
-      user.id === currentUser.id
-        ? { ...user, name: newUserName, email: newUserEmail, role: newUserRole }
-        : user
-    );
-    setUsers(updatedUsers);
-    setIsEditUserDialogOpen(false);
-    resetUserForm();
-  };
+  const handleSubmitEditUser = useCallback(async () => {
+    if (!onEditUser) return;
 
-  const handleToggleUserStatus = (userId) => {
-    const updatedUsers = users.map((user) =>
-      user.id === userId
-        ? { ...user, status: user.status === "Active" ? "Banned" : "Active" }
-        : user
-    );
-    setUsers(updatedUsers);
-  };
+    try {
+      const req = await AdminAPI.updateUserInfo(onEditUser);
 
-  const resetUserForm = () => {
-    setNewUserName("");
-    setNewUserEmail("");
-    setNewUserRole("User");
-    setCurrentUser(null);
-  };
+      if (req) {
+        toast.success("User updated successfully");
+        fetchUsersList();
+        setIsEditUserDialogOpen(false);
+        resetUserForm();
+      }
+    } catch (e) {
+      toast.error(e.response.data.message || "Failed to update user");
+    }
+  }, [fetchUsersList, onEditUser]);
 
-  const openEditUserDialog = (user) => {
-    setCurrentUser(user);
-    setNewUserName(user.name);
-    setNewUserEmail(user.email);
-    setNewUserRole(user.role);
-    setIsEditUserDialogOpen(true);
+  const updateUserStatus = async (
+    currentUserData: User,
+    isChangeStatus?: boolean
+  ) => {
+    console.log(currentUserData);
+    const updateStatus =
+      currentUserData.status === "active" ? "banned" : "active";
+
+    const updateUserData = {
+      ...currentUserData,
+      status: updateStatus as "active" | "banned",
+    };
+
+    try {
+      const res = await AdminAPI.updateUserInfo(
+        isChangeStatus ? updateUserData : currentUserData
+      );
+      toast.success(res.message);
+      fetchUsersList();
+    } catch (error) {
+      toast.error(
+        error.response.data.message || "Failed to update user status"
+      );
+    }
   };
 
   return (
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Sidebar */}
       <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
         <nav className="p-4">
           <ul className="space-y-2">
@@ -553,7 +546,7 @@ export function Dashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {users.filter((user) => user.status === "Active").length}
+                    {users.filter((user) => user.status === "active").length}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     +3 from last month
@@ -649,8 +642,13 @@ export function Dashboard() {
                         </Label>
                         <Input
                           id="name"
-                          value={newUserName}
-                          onChange={(e) => setNewUserName(e.target.value)}
+                          value={onEditUser?.username || ""}
+                          onChange={(e) =>
+                            setOnEditUser((prev) => ({
+                              ...prev,
+                              username: e.target.value,
+                            }))
+                          }
                           className="col-span-3"
                         />
                       </div>
@@ -661,26 +659,57 @@ export function Dashboard() {
                         <Input
                           id="email"
                           type="email"
-                          value={newUserEmail}
-                          onChange={(e) => setNewUserEmail(e.target.value)}
+                          value={onEditUser?.email || ""}
+                          onChange={(e) => {
+                            setOnEditUser((prev) => ({
+                              ...prev,
+                              email: e.target.value,
+                            }));
+                          }}
                           className="col-span-3"
                         />
                       </div>
+
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="email" className="text-right">
+                          Password
+                        </Label>
+                        <Input
+                          id="password"
+                          type="password"
+                          value={onEditUser?.password || ""}
+                          onChange={(e) => {
+                            setOnEditUser((prev) => ({
+                              ...prev,
+                              password: e.target.value,
+                            }));
+                          }}
+                          className="col-span-3"
+                        />
+                      </div>
+
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="role" className="text-right">
                           Role
                         </Label>
                         <Select
-                          value={newUserRole}
-                          onValueChange={setNewUserRole}
+                          // value={newUserRole}
+                          // onValueChange={setNewUserRole}
+                          value={onEditUser?.role || "user"}
+                          onValueChange={(value) => {
+                            setOnEditUser((prev) => ({
+                              ...prev,
+                              role: value as "user" | "moderator" | "admin",
+                            }));
+                          }}
                         >
                           <SelectTrigger className="col-span-3">
                             <SelectValue placeholder="Select role" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="User">User</SelectItem>
-                            <SelectItem value="Moderator">Moderator</SelectItem>
-                            <SelectItem value="Admin">Admin</SelectItem>
+                            <SelectItem value="user">User</SelectItem>
+                            <SelectItem value="moderator">Moderator</SelectItem>
+                            <SelectItem value="admin">Admin</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -704,19 +733,23 @@ export function Dashboard() {
                   </TableHeader>
                   <TableBody>
                     {users.map((user) => (
-                      <TableRow key={user.id}>
-                        <TableCell>{user.name}</TableCell>
+                      <TableRow key={user._id}>
+                        <TableCell>{user.username}</TableCell>
                         <TableCell>{user.email}</TableCell>
-                        <TableCell>{user.role}</TableCell>
+                        <TableCell>
+                          {user.role.charAt(0).toUpperCase() +
+                            user.role.slice(1)}
+                        </TableCell>
                         <TableCell>
                           <Badge
                             variant={
-                              user.status === "Active"
+                              user?.status === "active"
                                 ? "default"
                                 : "destructive"
                             }
                           >
-                            {user.status}
+                            {user?.status.charAt(0).toUpperCase() +
+                              user?.status.slice(1)}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -731,7 +764,7 @@ export function Dashboard() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => handleToggleUserStatus(user.id)}
+                              onClick={() => updateUserStatus(user, true)}
                             >
                               <Ban className="h-4 w-4" />
                             </Button>
@@ -874,8 +907,13 @@ export function Dashboard() {
               </Label>
               <Input
                 id="edit-name"
-                value={newUserName}
-                onChange={(e) => setNewUserName(e.target.value)}
+                value={onEditUser?.username || ""}
+                onChange={(e) =>
+                  setOnEditUser((prev) => ({
+                    ...prev,
+                    username: e.target.value,
+                  }))
+                }
                 className="col-span-3"
               />
             </div>
@@ -886,8 +924,13 @@ export function Dashboard() {
               <Input
                 id="edit-email"
                 type="email"
-                value={newUserEmail}
-                onChange={(e) => setNewUserEmail(e.target.value)}
+                value={onEditUser?.email || ""}
+                onChange={(e) => {
+                  setOnEditUser((prev) => ({
+                    ...prev,
+                    email: e.target.value,
+                  }));
+                }}
                 className="col-span-3"
               />
             </div>
@@ -895,20 +938,28 @@ export function Dashboard() {
               <Label htmlFor="edit-role" className="text-right">
                 Role
               </Label>
-              <Select value={newUserRole} onValueChange={setNewUserRole}>
+              <Select
+                value={onEditUser?.role || "user"}
+                onValueChange={(value) => {
+                  setOnEditUser((prev) => ({
+                    ...prev,
+                    role: value as "user" | "moderator" | "admin",
+                  }));
+                }}
+              >
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="User">User</SelectItem>
-                  <SelectItem value="Moderator">Moderator</SelectItem>
-                  <SelectItem value="Admin">Admin</SelectItem>
+                  <SelectItem value="user">User</SelectItem>
+                  <SelectItem value="moderator">Moderator</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleEditUser}>Save Changes</Button>
+            <Button onClick={handleSubmitEditUser}>Save Changes</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

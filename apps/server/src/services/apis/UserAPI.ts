@@ -43,7 +43,7 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET.toString(), {
       algorithm: "HS256",
     });
-    setCookie(c, "token", token);
+    setCookie(c, "userToken", token);
 
     await User.create(user);
 
@@ -101,12 +101,12 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET.toString(), {
       algorithm: "HS256",
     });
-    setCookie(c, "token", token);
+    setCookie(c, "userToken", token);
     return c.json({ token });
   });
 
   app.use("updateProfile", async (c) => {
-    const token = getCookie(c, "token");
+    const token = getCookie(c, "userToken");
     if (!token) {
       return c.json({ message: "No token provided" }, 401);
     }
@@ -164,7 +164,7 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
       const newToken = jwt.sign(payload, process.env.JWT_SECRET.toString(), {
         algorithm: "HS256",
       });
-      setCookie(c, "token", newToken);
+      setCookie(c, "userToken", newToken);
 
       return c.json({ token: newToken, message: "Profile updated!" });
     } catch (error) {
@@ -172,8 +172,8 @@ const AuthenticationAPI = (app: Hono, currentTimeServer: string) => {
     }
   });
 
-  app.use("verifyToken", async (c) => {
-    const token = getCookie(c, "token");
+  app.use("user/verifyToken", async (c) => {
+    const token = getCookie(c, "userToken");
     if (!token) {
       return c.json({ message: "No token provided" }, 401);
     }

@@ -1,7 +1,7 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import { User } from "../utils/types";
 import { toast } from "react-toastify";
-import { QuizAppAPI } from "../utils/apis/QuizAppAPI";
+import { AdminAPI } from "../utils/apis/AdminAPI";
 import Cookies from "js-cookie";
 const AuthContext = createContext({
   isLoggedIn: false,
@@ -15,16 +15,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [userInfo, setUserInfo] = useState<User>();
 
   const handleVerifyToken = useCallback(async () => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("adminToken");
     if (token) {
       try {
-        const res = await QuizAppAPI.verifyToken();
+        const res = await AdminAPI.verifyToken();
         if (res) {
           setLoggedIn(true);
           res.payload && setUserInfo(res.payload);
         }
         if (res.message) {
-          Cookies.remove("token");
+          Cookies.remove("adminToken");
           toast(res.message, {
             type: "error",
             autoClose: 1000,

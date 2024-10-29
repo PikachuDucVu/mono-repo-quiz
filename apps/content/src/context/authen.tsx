@@ -24,7 +24,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleVerifyToken = useCallback(async () => {
     setLoading(true);
-    const token = Cookies.get("token");
+    const token = Cookies.get("userToken");
     if (token) {
       try {
         const res = await QuizAppAPI.verifyToken();
@@ -33,7 +33,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           res.payload && setUserInfo(res.payload);
         }
         if (res.message) {
-          Cookies.remove("token");
+          Cookies.remove("userToken");
           toast(res.message, {
             type: "error",
             autoClose: 1000,

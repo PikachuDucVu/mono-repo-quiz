@@ -13,7 +13,7 @@ axiosInstance.interceptors.request.use((config) => {
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("userToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response.status === 401) {
-      Cookies.remove("token");
+      Cookies.remove("userToken");
       window.location.href = "/login";
     }
     return Promise.reject(error);

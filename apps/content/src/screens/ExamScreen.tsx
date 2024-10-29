@@ -19,10 +19,11 @@ export function ExamScreen() {
   const questionaireId = params.id;
 
   const onSubmit = async (answerData: QuestionItem[]) => {
+    setLoading(true);
     const { score } = await QuizAppAPI.submitAnswer(params.id, answerData);
     setTotalScore(parseInt(score));
-    console.log("score:", score);
     setSubmitted(true);
+    setLoading(false);
   };
 
   const fetchQuestionaire = useCallback(async () => {

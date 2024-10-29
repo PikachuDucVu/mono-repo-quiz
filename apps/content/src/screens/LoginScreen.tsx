@@ -29,10 +29,7 @@ export function LoginScreen() {
     }
 
     try {
-      const { token } = await QuizAppAPI.loginWithEmailandPassword(
-        email.toLowerCase(),
-        password
-      );
+      const { token } = await QuizAppAPI.login(email.toLowerCase(), password);
       if (token) {
         toast("Login successful! Redirecting...", {
           type: "success",
