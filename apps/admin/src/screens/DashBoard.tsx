@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  Bell,
-  ChevronDown,
   Layout,
   List,
   PieChart,
@@ -13,7 +11,6 @@ import {
   Ban,
   UserPlus,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
