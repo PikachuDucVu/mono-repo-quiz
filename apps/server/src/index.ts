@@ -8,13 +8,13 @@ import AdminAPI from "./services/apis/AdminAPI";
 import { connectMongoose } from "./services/mongoose";
 
 const app = new Hono();
-app.use(
-  "*",
-  cors({
-    origin: [process.env.URL_ADMIN_APP, process.env.URL_CLIENT_APP],
-    credentials: true,
-  })
-);
+// app.use(
+//   "*",
+//   cors({
+//     origin: [process.env.URL_ADMIN_APP, process.env.URL_CLIENT_APP],
+//     credentials: true,
+//   })
+// );
 app.use(logger());
 
 const currentServerTime = new Date().toISOString();
