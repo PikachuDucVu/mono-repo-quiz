@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  src: url("/fonts/GothamRounded/SVN_Gotham_Light.otf");
+  font-family: "GothamLight";
+}
+
+@font-face {
+  src: url("/fonts/GothamRounded/SVN_Gotham_Regular.otf");
+  font-family: "GothamMedium";
+}
+
+@font-face {
+  src: url("/fonts/GothamRounded/SVN_Gotham_Bold.otf");
+  font-family: "GothamBold";
+}
+
+html,
+body,
+#root {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+
+  min-height: 100vh;
+  height: -moz-available;
+  height: -webkit-fill-available;
+  height: 100dvh;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.BeVietnamProLight {
+  font-family: "BeVietnamProLight", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.BeVietnamProLight {
+  font-family: "BeVietnamProLight", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.BeVietnamProSemiBold {
+  font-family: "BeVietnamProSemiBold", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}

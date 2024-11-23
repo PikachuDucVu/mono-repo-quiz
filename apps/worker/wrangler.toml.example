@@ -1,0 +1,40 @@
+name = "worker"
+main = "src/index.ts"
+compatibility_date = "2024-11-06"
+
+# compatibility_flags = [ "nodejs_compat" ]
+
+[vars]
+JWT_SECRET = ""
+SETUP_ADMIN_PASSWORD = ""
+
+[durable_objects]
+bindings = [
+  { name = "SETUP_DURABLE_OBJECT", class_name = "SetupDO" },
+  { name = "LOBBY_DURABLE_OBJECT", class_name = "LobbyDO" },
+  { name = "GAME_DURABLE_OBJECT", class_name = "GameDO" }
+]
+
+[[migrations]]
+tag = "v3"
+new_classes = ["SetupDO", "LobbyDO", "GameDO"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hublock-game-d1"
+database_id = "1c762fbc-76c2-4b0f-ad37-2a88c983834a"
+
+# [[kv_namespaces]]
+# binding = "MY_KV_NAMESPACE"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# [[r2_buckets]]
+# binding = "MY_BUCKET"
+# bucket_name = "my-bucket"
+
+# [ai]
+# binding = "AI"
+
+# [observability]
+# enabled = true
+# head_sampling_rate = 1

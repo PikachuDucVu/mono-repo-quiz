@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+@font-face {
+  src: url("/fonts/GothamRounded/SVN_Gotham_Light.otf");
+  font-family: "GothamLight";
+}
+
+@font-face {
+  src: url("/fonts/GothamRounded/SVN_Gotham_Regular.otf");
+  font-family: "GothamMedium";
+}
+
+@font-face {
+  src: url("/fonts/GothamRounded/SVN_Gotham_Bold.otf");
+  font-family: "GothamBold";
+}
+
+.BeVietnamProLight {
+  font-family: "BeVietnamProLight", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.BeVietnamProSemiBold {
+  font-family: "BeVietnamProSemiBold", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
