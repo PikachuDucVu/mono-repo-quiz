@@ -122,6 +122,17 @@ export function DashboardQuestionaireScreen() {
                   <PlayIcon className="w-4 h-4 mr-2" />
                   Chơi
                 </Button>
+
+                <Button
+                  variant="outline"
+                  className="bg-green-300"
+                  onClick={() => {
+                    navigateToPlayQuiz(questionnaire._id);
+                  }}
+                >
+                  <PlayIcon className="w-4 h-4 mr-2" />
+                  Chơi cùng mọi người
+                </Button>
               </div>
             </div>
           </Card>
