@@ -1,7 +1,7 @@
 {
   "name": "worker",
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "",
     "deploy": "wrangler deploy --minify"
   },
   "dependencies": {
