@@ -21,9 +21,7 @@ export const RegisterScreen = () => {
       }}
     >
       <div className="flex justify-center items-end flex-1">
-        <div className="p-6 px-3 bg-white rounded-[30px] border-4 border-x-2 border-b-8 border-gray-500 h-fit">
-          <img src="/assets/Hublock.png" className="w-[147px] h-[120px]" />
-        </div>
+        <div className="p-6 px-3 bg-white rounded-[30px] border-4 border-x-2 border-b-8 border-gray-500 h-fit"></div>
       </div>
 
       <div className="flex flex-col gap-2 flex-1 justify-center h-[40vh]">
