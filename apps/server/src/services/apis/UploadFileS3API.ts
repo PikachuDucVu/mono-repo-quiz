@@ -34,7 +34,6 @@ export const UploadFile = async (app: Hono) => {
       file: File;
       username: string;
     };
-    console.log(file, username);
 
     const fileBuffer = Buffer.from(await file.arrayBuffer());
 

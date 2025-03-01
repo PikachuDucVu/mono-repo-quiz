@@ -16,7 +16,11 @@ const app = new Hono();
 app.use(
   "*",
   cors({
-    origin: "*",
+    origin: [
+      process.env.VITE_STORAGE_CLIENT_URL,
+      process.env.VITE_CLIENT_QUIZ_URL,
+      process.env.VITE_ADMIN_QUIZ_URL,
+    ],
     credentials: true,
   })
 );
