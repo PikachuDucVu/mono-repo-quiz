@@ -11,19 +11,29 @@ import {
   UploadFile,
   UploadImage,
 } from "./services/apis/UploadFileS3API";
+import { CustomAPI } from "./services/apis/CustomAPI";
 
 const app = new Hono();
+// app.use(
+//   "*",
+//   cors({
+//     origin: [
+//       process.env.VITE_STORAGE_CLIENT_URL,
+//       process.env.VITE_CLIENT_QUIZ_URL,
+//       process.env.VITE_ADMIN_QUIZ_URL,
+//     ],
+//     credentials: true,
+//   })
+// );
+
 app.use(
   "*",
   cors({
-    origin: [
-      process.env.VITE_STORAGE_CLIENT_URL,
-      process.env.VITE_CLIENT_QUIZ_URL,
-      process.env.VITE_ADMIN_QUIZ_URL,
-    ],
+    origin: "*",
     credentials: true,
   })
 );
+
 app.use(logger());
 
 const currentServerTime = new Date().toISOString();
@@ -45,6 +55,7 @@ connectMongoose();
 AdminAPI(app);
 AuthenticationAPI(app, currentServerTime);
 QuestionnaireAPI(app, currentServerTime);
+CustomAPI(app, currentServerTime);
 // s3aws
 UploadImage(app);
 UploadFile(app);

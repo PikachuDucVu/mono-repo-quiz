@@ -30,17 +30,28 @@ const s3MindX = new S3Client({
 
 export const UploadFile = async (app: Hono) => {
   app.post("file/upload", async (c) => {
-    const { file, username } = (await c.req.parseBody()) as {
+    const { file, username, docType } = (await c.req.parseBody()) as {
       file: File;
       username: string;
+      docType: "spck" | "test";
     };
+
+    if (!file) {
+      return c.text("File not found", 400);
+    }
+    if (!docType || !["spck", "test"].includes(docType)) {
+      return c.text("File type not supported", 400);
+    }
+    if (!username) {
+      return c.text("Username not found", 400);
+    }
 
     const fileBuffer = Buffer.from(await file.arrayBuffer());
 
     const timeStamp = new Date().toISOString();
     const uploadParams = {
       Bucket: s3MindXConfig.bucket,
-      Key: `spck/${username}/${file.name.split(".")[0]}-${timeStamp}.${file.name.split(".")[1]}`,
+      Key: `${docType}/${username}/${file.name.split(".")[0]}-${timeStamp}.${file.name.split(".")[1]}`,
       Body: fileBuffer,
       ContentType: file.type,
     };
@@ -75,11 +86,11 @@ export const GetAllFilesSPCK = async (app: Hono) => {
 
 export const DownloadFile = async (app: Hono) => {
   app.post("file/download", async (c) => {
-    const { fileName } = await c.req.json();
+    const { fileName, docType } = await c.req.json();
     console.log(await c.req.json());
     const listParams = {
       Bucket: s3MindXConfig.bucket,
-      Key: `spck/${fileName}`,
+      Key: `${docType}/${fileName}`,
     };
 
     try {
