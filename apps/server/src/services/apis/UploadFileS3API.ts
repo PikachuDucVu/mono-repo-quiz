@@ -11,6 +11,7 @@ import {
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
 import { s3MindXConfig, s3QuizConfig } from "../../utils/s3aws";
+import { encode } from "urlencode";
 
 const s3Quiz = new S3Client({
   credentials: {
@@ -87,23 +88,46 @@ export const GetAllFilesSPCK = async (app: Hono) => {
 
 export const DownloadFile = async (app: Hono) => {
   app.post("file/download", async (c) => {
-    const { fileName, docType } = await c.req.json();
-    console.log(await c.req.json());
-    const listParams = {
-      Bucket: s3MindXConfig.bucket,
-      Key: `${docType}/${fileName}`,
-    };
-
     try {
+      const { fileName, docType } = (await c.req.json()) as {
+        fileName: string;
+        docType: "spck" | "test";
+      };
+
+      console.log("Raw fileName:", fileName);
+
+      if (
+        !fileName ||
+        typeof fileName !== "string" ||
+        !fileName.includes("/")
+      ) {
+        console.error("Invalid fileName format:", fileName);
+        return c.text("Invalid file name", 400);
+      }
+
+      // Use raw file path for S3
+      const key = `${docType}/${fileName}`;
+      console.log("Fetching from S3:", key);
+
+      const listParams = {
+        Bucket: s3MindXConfig.bucket,
+        Key: key,
+      };
+
       const command = new GetObjectCommand(listParams);
       const { Body, ContentType } = await s3MindX.send(command);
 
+      // Fix Content-Disposition issue
+      const encodedFileName = encode(fileName, "utf8"); // Proper UTF-8 encoding
+      const contentDisposition = `attachment; filename*=UTF-8''${encodedFileName}`;
+
       c.header("Content-Type", ContentType);
-      c.header("Content-Disposition", `attachment; filename="${fileName}"`);
-      console.log("done");
+      c.header("Content-Disposition", contentDisposition);
+
+      console.log("Download successful");
       return c.body(Body);
     } catch (err) {
-      console.error(err);
+      console.error("Download error:", err);
       return c.text("Failed to download file", 500);
     }
   });
