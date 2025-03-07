@@ -77,7 +77,6 @@ export const GetAllFilesSPCK = async (app: Hono) => {
 
     try {
       const data = await s3MindX.send(new ListObjectsV2Command(listParams));
-      console.log(data);
       return c.json({ files: data.Contents, success: true });
     } catch (err) {
       console.error(err);
