@@ -11,7 +11,7 @@ import {
   UploadFile,
   UploadImage,
 } from "./services/apis/UploadFileS3API";
-import { CustomAPI } from "./services/apis/CustomAPI";
+import { CustomAPI } from "./services/apis/hieu-services/CustomAPI";
 
 const app = new Hono();
 // app.use(

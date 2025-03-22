@@ -148,8 +148,6 @@ export const UploadImage = async (app: Hono) => {
     const imageFile = body["image"] as File;
     const fileBuffer = Buffer.from(await imageFile.arrayBuffer());
 
-    console.log(s3QuizConfig);
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET.toString()) as {
       email: string;
       username: string;
